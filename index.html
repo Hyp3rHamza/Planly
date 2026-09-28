@@ -229,10 +229,16 @@ Planly • Built to make your day easier
 
 function formatTime(minutes) {
 
-    let hours = Math.floor(minutes / 60);
-    let mins = minutes % 60;
+    // Detect if the time goes into the next day
+    const nextDay = minutes >= 1440;
 
-    let period = hours >= 12 ? "PM" : "AM";
+    // Convert 24+ hour times back onto a normal clock
+    const adjustedMinutes = minutes % 1440;
+
+    const hours = Math.floor(adjustedMinutes / 60);
+    const mins = adjustedMinutes % 60;
+
+    const period = hours >= 12 ? "PM" : "AM";
 
     let displayHour = hours % 12;
 
@@ -242,19 +248,22 @@ function formatTime(minutes) {
 
     return displayHour + ":" +
         mins.toString().padStart(2, "0") +
-        " " + period;
+        " " + period +
+        (nextDay ? " (next day)" : "");
 }
 
 
 function parseTime(text) {
 
-    let match = text.match(/(\d{1,2}):(\d{2})\s*(AM|PM)/i);
+    const match = text.match(
+        /(\d{1,2}):(\d{2})\s*(AM|PM)/i
+    );
 
     if (!match) return null;
 
     let hour = parseInt(match[1]);
-    let minute = parseInt(match[2]);
-    let period = match[3].toUpperCase();
+    const minute = parseInt(match[2]);
+    const period = match[3].toUpperCase();
 
     if (period === "PM" && hour !== 12) {
         hour += 12;
@@ -270,22 +279,29 @@ function parseTime(text) {
 
 function parseDuration(text) {
 
-    let minuteMatch = text.match(/(\d+)\s*min(?:ute)?s?/i);
+    const minuteMatch =
+        text.match(/(\d+)\s*min(?:ute)?s?/i);
 
     if (minuteMatch) {
         return parseInt(minuteMatch[1]);
     }
 
-    let hourMatch = text.match(/(\d+(?:\.\d+)?)\s*hours?/i);
+    const hourMatch =
+        text.match(/(\d+(?:\.\d+)?)\s*hours?/i);
 
     if (hourMatch) {
-        return Math.round(parseFloat(hourMatch[1]) * 60);
+        return Math.round(
+            parseFloat(hourMatch[1]) * 60
+        );
     }
 
-    let hourSingleMatch = text.match(/(\d+(?:\.\d+)?)\s*hr/i);
+    const hrMatch =
+        text.match(/(\d+(?:\.\d+)?)\s*hrs?/i);
 
-    if (hourSingleMatch) {
-        return Math.round(parseFloat(hourSingleMatch[1]) * 60);
+    if (hrMatch) {
+        return Math.round(
+            parseFloat(hrMatch[1]) * 60
+        );
     }
 
     return null;
@@ -293,7 +309,6 @@ function parseDuration(text) {
 
 
 function isSleepTask(name) {
-
     return /sleep|bed|go to bed/i.test(name);
 }
 
@@ -301,23 +316,39 @@ function isSleepTask(name) {
 function cleanTaskName(text) {
 
     return text
-        .replace(/\s*-\s*\d+(?:\.\d+)?\s*(?:min(?:ute)?s?|hours?|hrs?)\b/i, "")
-        .replace(/\s*-\s*\d{1,2}:\d{2}\s*(?:AM|PM)/i, "")
+        .replace(
+            /\s*-\s*\d+(?:\.\d+)?\s*(?:min(?:ute)?s?|hours?|hrs?)\b/i,
+            ""
+        )
+        .replace(
+            /\s*-\s*\d{1,2}:\d{2}\s*(?:AM|PM)/i,
+            ""
+        )
         .trim();
 }
 
 
 function makeSchedule() {
 
-    const input = document.getElementById("tasks").value.trim();
-    const start = document.getElementById("startTime").value;
-    const end = document.getElementById("endTime").value;
-    const schedule = document.getElementById("schedule");
+    const input =
+        document.getElementById("tasks").value.trim();
+
+    const start =
+        document.getElementById("startTime").value;
+
+    const end =
+        document.getElementById("endTime").value;
+
+    const schedule =
+        document.getElementById("schedule");
+
 
     if (!input) {
-        schedule.innerHTML = "<p>Enter some tasks first.</p>";
+        schedule.innerHTML =
+            "<p>Enter some tasks first.</p>";
         return;
     }
+
 
     if (!start || !end) {
         schedule.innerHTML =
@@ -325,16 +356,20 @@ function makeSchedule() {
         return;
     }
 
-    let startParts = start.split(":");
-    let endParts = end.split(":");
 
-    let startMinutes =
+    const startParts = start.split(":");
+    const endParts = end.split(":");
+
+
+    const startMinutes =
         parseInt(startParts[0]) * 60 +
         parseInt(startParts[1]);
 
-    let endMinutes =
+
+    const endMinutes =
         parseInt(endParts[0]) * 60 +
         parseInt(endParts[1]);
+
 
     if (endMinutes <= startMinutes) {
         schedule.innerHTML =
@@ -342,31 +377,38 @@ function makeSchedule() {
         return;
     }
 
-    let lines = input
+
+    const lines = input
         .split("\n")
         .map(x => x.trim())
         .filter(x => x.length > 0);
 
+
     let fixedTasks = [];
     let flexibleTasks = [];
+
 
     lines.forEach(line => {
 
         let priority = "NORMAL";
 
+
         if (line.startsWith("!!")) {
             priority = "MUST DO";
             line = line.substring(2).trim();
         }
+
         else if (line.startsWith("!")) {
             priority = "SHOULD DO";
             line = line.substring(1).trim();
         }
 
-        let fixedTime = parseTime(line);
-        let duration = parseDuration(line);
-        let name = cleanTaskName(line);
-        let sleep = isSleepTask(name);
+
+        const fixedTime = parseTime(line);
+        const duration = parseDuration(line);
+        const name = cleanTaskName(line);
+        const sleep = isSleepTask(name);
+
 
         if (fixedTime !== null) {
 
@@ -378,7 +420,9 @@ function makeSchedule() {
                 sleep: sleep
             });
 
-        } else {
+        }
+
+        else {
 
             flexibleTasks.push({
                 name: name,
@@ -388,22 +432,21 @@ function makeSchedule() {
             });
 
         }
+
     });
 
 
-    fixedTasks.sort((a, b) => a.time - b.time);
+    fixedTasks.sort(
+        (a, b) => a.time - b.time
+    );
 
 
-    /*
-       Sleep is treated specially.
-       If the user enters "Sleep - 9 hours",
-       Planly will NOT squeeze it into the
-       normal afternoon schedule.
-    */
+    const sleepTasks =
+        flexibleTasks.filter(task => task.sleep);
 
-    let sleepTasks = flexibleTasks.filter(task => task.sleep);
 
-    flexibleTasks = flexibleTasks.filter(task => !task.sleep);
+    flexibleTasks =
+        flexibleTasks.filter(task => !task.sleep);
 
 
     let events = [];
@@ -441,7 +484,7 @@ function makeSchedule() {
 
         while (true) {
 
-            let conflict = events.find(event =>
+            const conflict = events.find(event =>
                 currentTime < event.end &&
                 currentTime + task.duration > event.start
             );
@@ -452,7 +495,10 @@ function makeSchedule() {
         }
 
 
-        if (currentTime + task.duration <= endMinutes) {
+        if (
+            currentTime + task.duration
+            <= endMinutes
+        ) {
 
             events.push({
                 name: task.name,
@@ -468,12 +514,7 @@ function makeSchedule() {
     });
 
 
-    /*
-       Sleep is displayed separately so it doesn't
-       pretend that the user is sleeping during
-       their available afternoon time.
-    */
-
+    // Put sleep after the user's available period
     sleepTasks.forEach(task => {
 
         events.push({
@@ -487,7 +528,9 @@ function makeSchedule() {
     });
 
 
-    events.sort((a, b) => a.start - b.start);
+    events.sort(
+        (a, b) => a.start - b.start
+    );
 
 
     let html = "<h2>🗓️ Your Plan</h2>";
@@ -497,15 +540,19 @@ function makeSchedule() {
 
         let priorityText = "";
 
+
         if (event.type === "sleep") {
             priorityText = "🌙 SLEEP";
         }
+
         else if (event.priority === "MUST DO") {
             priorityText = "🔴 MUST DO";
         }
+
         else if (event.priority === "SHOULD DO") {
             priorityText = "🟡 SHOULD DO";
         }
+
         else {
             priorityText = "TASK";
         }
@@ -513,7 +560,10 @@ function makeSchedule() {
 
         html += `
             <div class="task ${event.type}">
-                <strong>${priorityText}</strong><br>
+
+                <strong>${priorityText}</strong>
+
+                <br>
 
                 <strong>
                     ${formatTime(event.start)}
@@ -524,9 +574,18 @@ function makeSchedule() {
                 <br>
 
                 ${event.name}
+
             </div>
         `;
     });
+
+
+    if (events.length === 0) {
+
+        html +=
+            "<p>No tasks could fit in this time period.</p>";
+
+    }
 
 
     schedule.innerHTML = html;
