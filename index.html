@@ -1,597 +1,213 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Planly</title>
 
-<title>Planly — Your Day, Organized</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: #f5f6fa;
+      color: #222;
+    }
 
-<style>
-* {
-    box-sizing: border-box;
-}
+    header {
+      background: #111827;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
 
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: #f5f7fb;
-    color: #111827;
-}
+    header h1 {
+      margin: 0;
+      font-size: 30px;
+    }
 
-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 22px 8%;
-    background: white;
-    border-bottom: 1px solid #e5e7eb;
-}
+    .container {
+      max-width: 700px;
+      margin: 20px auto;
+      padding: 0 16px;
+    }
 
-.logo {
-    font-size: 26px;
-    font-weight: 800;
-}
+    .card {
+      background: white;
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
 
-.tag {
-    color: #6b7280;
-    font-size: 14px;
-}
+    input {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 13px;
+      margin: 6px 0 10px;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      font-size: 16px;
+    }
 
-.hero {
-    max-width: 900px;
-    margin: 70px auto;
-    padding: 0 25px;
-    text-align: center;
-}
+    button {
+      border: none;
+      border-radius: 10px;
+      padding: 12px 16px;
+      font-size: 15px;
+      cursor: pointer;
+      margin: 4px;
+    }
 
-.hero h1 {
-    font-size: 52px;
-    margin-bottom: 15px;
-}
+    .add {
+      background: #2563eb;
+      color: white;
+    }
 
-.hero p {
-    font-size: 20px;
-    color: #6b7280;
-    margin-bottom: 35px;
-}
+    .save {
+      background: #16a34a;
+      color: white;
+    }
 
-.box {
-    background: white;
-    padding: 30px;
-    border-radius: 20px;
-    box-shadow: 0 10px 35px rgba(0,0,0,0.08);
-    text-align: left;
-}
+    .clear {
+      background: #dc2626;
+      color: white;
+    }
 
-textarea {
-    width: 100%;
-    min-height: 180px;
-    padding: 18px;
-    border: 2px solid #e5e7eb;
-    border-radius: 12px;
-    font-size: 16px;
-    resize: vertical;
-    outline: none;
-}
+    .schedule-item {
+      background: #f3f4f6;
+      padding: 12px;
+      border-radius: 10px;
+      margin: 8px 0;
+    }
 
-textarea:focus,
-input:focus {
-    border-color: #6366f1;
-}
+    .empty {
+      color: #777;
+      text-align: center;
+      padding: 15px;
+    }
 
-.times {
-    display: flex;
-    gap: 15px;
-    margin-top: 20px;
-}
-
-.time-box {
-    flex: 1;
-}
-
-.time-box label {
-    display: block;
-    font-weight: 700;
-    margin-bottom: 8px;
-}
-
-input {
-    width: 100%;
-    padding: 13px;
-    border: 2px solid #e5e7eb;
-    border-radius: 10px;
-    font-size: 16px;
-}
-
-button {
-    width: 100%;
-    margin-top: 20px;
-    padding: 16px;
-    border: none;
-    border-radius: 12px;
-    background: #6366f1;
-    color: white;
-    font-size: 17px;
-    font-weight: 700;
-    cursor: pointer;
-}
-
-button:hover {
-    background: #4f46e5;
-}
-
-#schedule {
-    margin-top: 30px;
-}
-
-.task {
-    padding: 16px;
-    margin: 10px 0;
-    border-radius: 10px;
-    background: #f3f4f6;
-    border-left: 6px solid #6366f1;
-}
-
-.fixed {
-    border-left-color: #ef4444;
-}
-
-.duration {
-    border-left-color: #f59e0b;
-}
-
-.sleep {
-    border-left-color: #8b5cf6;
-}
-
-.info {
-    background: #f3f4f6;
-    padding: 15px;
-    border-radius: 10px;
-    margin-bottom: 20px;
-    color: #4b5563;
-    font-size: 14px;
-}
-
-footer {
-    text-align: center;
-    padding: 30px;
-    color: #9ca3af;
-}
-</style>
+    h2 {
+      margin-top: 0;
+    }
+  </style>
 </head>
 
 <body>
 
 <header>
-    <div class="logo">Planly</div>
-    <div class="tag">Your day, organized.</div>
+  <h1>📅 Planly</h1>
+  <p>Your daily schedule</p>
 </header>
 
-<section class="hero">
+<div class="container">
 
-<h1>Turn your chaos into a plan.</h1>
+  <div class="card">
+    <h2>🗓️ Today</h2>
 
-<p>
-Tell Planly what you need to do. We'll organize it around your time.
-</p>
+    <input id="timeInput" type="time">
+    <input id="taskInput" type="text" placeholder="What are you doing?">
 
-<div class="box">
+    <button class="add" onclick="addTask()">➕ Add Task</button>
+  </div>
 
-<h2>What do you need to get done?</h2>
+  <div class="card">
+    <h2>📋 Saved Plan</h2>
 
-<div class="info">
-<b>Examples:</b><br><br>
+    <div id="schedule"></div>
 
-<b>Duration:</b> Homework - 60 min<br>
-<b>Hours:</b> Sleep - 9 hours<br>
-<b>Fixed time:</b> Basketball - 5:00 PM<br>
-<b>Priority:</b> !! Homework - 60 min
-</div>
-
-<textarea id="tasks"
-placeholder="Example:
-!! Homework - 60 min
-Dinner - 30 min
-Basketball - 5:00 PM
-Sleep - 9 hours
-! Clean room - 30 min"></textarea>
-
-<div class="times">
-
-<div class="time-box">
-<label>I'm free from</label>
-<input type="time" id="startTime">
-</div>
-
-<div class="time-box">
-<label>Until</label>
-<input type="time" id="endTime">
-</div>
+    <button class="save" onclick="savePlan()">💾 Save Plan</button>
+    <button class="clear" onclick="clearPlan()">🗑️ Clear Plan</button>
+  </div>
 
 </div>
-
-<button onclick="makeSchedule()">
-✨ Build My Plan
-</button>
-
-<div id="schedule"></div>
-
-</div>
-
-</section>
-
-<footer>
-Planly • Built to make your day easier
-</footer>
 
 <script>
+  let schedule = JSON.parse(localStorage.getItem("planlySchedule")) || [];
 
-function formatTime(minutes) {
+  function displaySchedule() {
+    const scheduleDiv = document.getElementById("schedule");
 
-    // Detect if the time goes into the next day
-    const nextDay = minutes >= 1440;
+    scheduleDiv.innerHTML = "";
 
-    // Convert 24+ hour times back onto a normal clock
-    const adjustedMinutes = minutes % 1440;
-
-    const hours = Math.floor(adjustedMinutes / 60);
-    const mins = adjustedMinutes % 60;
-
-    const period = hours >= 12 ? "PM" : "AM";
-
-    let displayHour = hours % 12;
-
-    if (displayHour === 0) {
-        displayHour = 12;
+    if (schedule.length === 0) {
+      scheduleDiv.innerHTML =
+        '<div class="empty">No tasks yet. Add something above!</div>';
+      return;
     }
 
-    return displayHour + ":" +
-        mins.toString().padStart(2, "0") +
-        " " + period +
-        (nextDay ? " (next day)" : "");
-}
+    schedule.forEach((item, index) => {
+      const div = document.createElement("div");
+      div.className = "schedule-item";
 
+      div.innerHTML = `
+        <strong>${item.time}</strong> — ${item.task}
+        <button onclick="removeTask(${index})">❌</button>
+      `;
 
-function parseTime(text) {
+      scheduleDiv.appendChild(div);
+    });
+  }
 
-    const match = text.match(
-        /(\d{1,2}):(\d{2})\s*(AM|PM)/i
+  function addTask() {
+    const time = document.getElementById("timeInput").value;
+    const task = document.getElementById("taskInput").value.trim();
+
+    if (!time || !task) {
+      alert("Please enter a time and task.");
+      return;
+    }
+
+    schedule.push({
+      time: time,
+      task: task
+    });
+
+    schedule.sort((a, b) => a.time.localeCompare(b.time));
+
+    document.getElementById("timeInput").value = "";
+    document.getElementById("taskInput").value = "";
+
+    displaySchedule();
+  }
+
+  function removeTask(index) {
+    schedule.splice(index, 1);
+    displaySchedule();
+  }
+
+  function savePlan() {
+    localStorage.setItem(
+      "planlySchedule",
+      JSON.stringify(schedule)
     );
 
-    if (!match) return null;
+    alert("✅ Plan saved!");
+  }
 
-    let hour = parseInt(match[1]);
-    const minute = parseInt(match[2]);
-    const period = match[3].toUpperCase();
-
-    if (period === "PM" && hour !== 12) {
-        hour += 12;
+  function clearPlan() {
+    if (schedule.length === 0) {
+      return;
     }
 
-    if (period === "AM" && hour === 12) {
-        hour = 0;
-    }
-
-    return hour * 60 + minute;
-}
-
-
-function parseDuration(text) {
-
-    const minuteMatch =
-        text.match(/(\d+)\s*min(?:ute)?s?/i);
-
-    if (minuteMatch) {
-        return parseInt(minuteMatch[1]);
-    }
-
-    const hourMatch =
-        text.match(/(\d+(?:\.\d+)?)\s*hours?/i);
-
-    if (hourMatch) {
-        return Math.round(
-            parseFloat(hourMatch[1]) * 60
-        );
-    }
-
-    const hrMatch =
-        text.match(/(\d+(?:\.\d+)?)\s*hrs?/i);
-
-    if (hrMatch) {
-        return Math.round(
-            parseFloat(hrMatch[1]) * 60
-        );
-    }
-
-    return null;
-}
-
-
-function isSleepTask(name) {
-    return /sleep|bed|go to bed/i.test(name);
-}
-
-
-function cleanTaskName(text) {
-
-    return text
-        .replace(
-            /\s*-\s*\d+(?:\.\d+)?\s*(?:min(?:ute)?s?|hours?|hrs?)\b/i,
-            ""
-        )
-        .replace(
-            /\s*-\s*\d{1,2}:\d{2}\s*(?:AM|PM)/i,
-            ""
-        )
-        .trim();
-}
-
-
-function makeSchedule() {
-
-    const input =
-        document.getElementById("tasks").value.trim();
-
-    const start =
-        document.getElementById("startTime").value;
-
-    const end =
-        document.getElementById("endTime").value;
-
-    const schedule =
-        document.getElementById("schedule");
-
-
-    if (!input) {
-        schedule.innerHTML =
-            "<p>Enter some tasks first.</p>";
-        return;
-    }
-
-
-    if (!start || !end) {
-        schedule.innerHTML =
-            "<p>Please choose when you're free.</p>";
-        return;
-    }
-
-
-    const startParts = start.split(":");
-    const endParts = end.split(":");
-
-
-    const startMinutes =
-        parseInt(startParts[0]) * 60 +
-        parseInt(startParts[1]);
-
-
-    const endMinutes =
-        parseInt(endParts[0]) * 60 +
-        parseInt(endParts[1]);
-
-
-    if (endMinutes <= startMinutes) {
-        schedule.innerHTML =
-            "<p>Your end time needs to be after your start time.</p>";
-        return;
-    }
-
-
-    const lines = input
-        .split("\n")
-        .map(x => x.trim())
-        .filter(x => x.length > 0);
-
-
-    let fixedTasks = [];
-    let flexibleTasks = [];
-
-
-    lines.forEach(line => {
-
-        let priority = "NORMAL";
-
-
-        if (line.startsWith("!!")) {
-            priority = "MUST DO";
-            line = line.substring(2).trim();
-        }
-
-        else if (line.startsWith("!")) {
-            priority = "SHOULD DO";
-            line = line.substring(1).trim();
-        }
-
-
-        const fixedTime = parseTime(line);
-        const duration = parseDuration(line);
-        const name = cleanTaskName(line);
-        const sleep = isSleepTask(name);
-
-
-        if (fixedTime !== null) {
-
-            fixedTasks.push({
-                name: name,
-                time: fixedTime,
-                duration: duration || 60,
-                priority: priority,
-                sleep: sleep
-            });
-
-        }
-
-        else {
-
-            flexibleTasks.push({
-                name: name,
-                duration: duration || 30,
-                priority: priority,
-                sleep: sleep
-            });
-
-        }
-
-    });
-
-
-    fixedTasks.sort(
-        (a, b) => a.time - b.time
+    const confirmed = confirm(
+      "Are you sure you want to clear today's plan?"
     );
 
-
-    const sleepTasks =
-        flexibleTasks.filter(task => task.sleep);
-
-
-    flexibleTasks =
-        flexibleTasks.filter(task => !task.sleep);
-
-
-    let events = [];
-
-
-    fixedTasks.forEach(task => {
-
-        events.push({
-            name: task.name,
-            start: task.time,
-            end: task.time + task.duration,
-            priority: task.priority,
-            type: task.sleep ? "sleep" : "fixed"
-        });
-
-    });
-
-
-    flexibleTasks.sort((a, b) => {
-
-        if (a.priority === "MUST DO") return -1;
-        if (b.priority === "MUST DO") return 1;
-
-        if (a.priority === "SHOULD DO") return -1;
-        if (b.priority === "SHOULD DO") return 1;
-
-        return 0;
-    });
-
-
-    let currentTime = startMinutes;
-
-
-    flexibleTasks.forEach(task => {
-
-        while (true) {
-
-            const conflict = events.find(event =>
-                currentTime < event.end &&
-                currentTime + task.duration > event.start
-            );
-
-            if (!conflict) break;
-
-            currentTime = conflict.end;
-        }
-
-
-        if (
-            currentTime + task.duration
-            <= endMinutes
-        ) {
-
-            events.push({
-                name: task.name,
-                start: currentTime,
-                end: currentTime + task.duration,
-                priority: task.priority,
-                type: "duration"
-            });
-
-            currentTime += task.duration;
-        }
-
-    });
-
-
-    // Put sleep after the user's available period
-    sleepTasks.forEach(task => {
-
-        events.push({
-            name: task.name,
-            start: endMinutes,
-            end: endMinutes + task.duration,
-            priority: task.priority,
-            type: "sleep"
-        });
-
-    });
-
-
-    events.sort(
-        (a, b) => a.start - b.start
-    );
-
-
-    let html = "<h2>🗓️ Your Plan</h2>";
-
-
-    events.forEach(event => {
-
-        let priorityText = "";
-
-
-        if (event.type === "sleep") {
-            priorityText = "🌙 SLEEP";
-        }
-
-        else if (event.priority === "MUST DO") {
-            priorityText = "🔴 MUST DO";
-        }
-
-        else if (event.priority === "SHOULD DO") {
-            priorityText = "🟡 SHOULD DO";
-        }
-
-        else {
-            priorityText = "TASK";
-        }
-
-
-        html += `
-            <div class="task ${event.type}">
-
-                <strong>${priorityText}</strong>
-
-                <br>
-
-                <strong>
-                    ${formatTime(event.start)}
-                    –
-                    ${formatTime(event.end)}
-                </strong>
-
-                <br>
-
-                ${event.name}
-
-            </div>
-        `;
-    });
-
-
-    if (events.length === 0) {
-
-        html +=
-            "<p>No tasks could fit in this time period.</p>";
-
+    if (!confirmed) {
+      return;
     }
 
+    schedule = [];
 
-    schedule.innerHTML = html;
-}
+    localStorage.removeItem("planlySchedule");
 
+    displaySchedule();
+  }
+
+  displaySchedule();
 </script>
 
 </body>
 </html>
+```
