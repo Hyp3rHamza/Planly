@@ -39,20 +39,38 @@ header {
 
 .hero {
     max-width: 900px;
-    margin: 60px auto;
-    padding: 0 25px;
+    margin: 45px auto;
+    padding: 0 20px;
     text-align: center;
 }
 
 .hero h1 {
     font-size: 48px;
-    margin-bottom: 15px;
+    margin-bottom: 10px;
 }
 
 .hero p {
-    font-size: 19px;
     color: #6b7280;
-    margin-bottom: 35px;
+    font-size: 18px;
+    margin-bottom: 30px;
+}
+
+.tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.tab {
+    flex: 1;
+    margin: 0;
+    background: #e5e7eb;
+    color: #374151;
+}
+
+.tab.active {
+    background: #6366f1;
+    color: white;
 }
 
 .box {
@@ -125,17 +143,9 @@ button:hover {
     color: #111827;
 }
 
-.secondary:hover {
-    background: #d1d5db;
-}
-
 .danger {
     background: #fee2e2;
     color: #991b1b;
-}
-
-.danger:hover {
-    background: #fecaca;
 }
 
 #schedule {
@@ -174,6 +184,13 @@ button:hover {
     border-radius: 14px;
 }
 
+.status {
+    text-align: center;
+    margin-top: 12px;
+    font-weight: 700;
+    color: #16a34a;
+}
+
 .info {
     background: #f3f4f6;
     padding: 15px;
@@ -181,13 +198,6 @@ button:hover {
     margin-bottom: 20px;
     color: #4b5563;
     font-size: 14px;
-}
-
-.status {
-    text-align: center;
-    margin-top: 12px;
-    font-weight: 700;
-    color: #16a34a;
 }
 
 footer {
@@ -203,7 +213,7 @@ footer {
     }
 
     .hero {
-        margin: 35px auto;
+        margin: 30px auto;
     }
 
     .hero h1 {
@@ -230,22 +240,32 @@ footer {
 
 <section class="hero">
 
-<h1>Turn your chaos into a plan.</h1>
+<h1>Plan your day.</h1>
 
-<p>
-Plan your day, save it, and come back whenever you need it.
-</p>
+<p>Organize today and prepare for tomorrow.</p>
+
+<div class="tabs">
+
+<button id="todayTab" class="tab active" onclick="switchDay('today')">
+📅 Today
+</button>
+
+<button id="tomorrowTab" class="tab" onclick="switchDay('tomorrow')">
+➡️ Tomorrow
+</button>
+
+</div>
 
 <div class="box">
 
-<h2>What do you need to get done?</h2>
+<h2 id="dayTitle">Today's Plan</h2>
 
 <div class="info">
 <b>Examples:</b><br><br>
-<b>Duration:</b> Homework - 60 min<br>
-<b>Hours:</b> Sleep - 9 hours<br>
-<b>Fixed time:</b> Basketball - 5:00 PM<br>
-<b>Priority:</b> !! Homework - 60 min
+Homework - 60 min<br>
+Basketball - 5:00 PM<br>
+Dinner - 30 min<br>
+Sleep - 9 hours
 </div>
 
 <textarea id="tasks"
@@ -253,8 +273,7 @@ placeholder="Example:
 !! Homework - 60 min
 Dinner - 30 min
 Basketball - 5:00 PM
-Sleep - 9 hours
-! Clean room - 30 min"></textarea>
+Sleep - 9 hours"></textarea>
 
 <div class="times">
 
@@ -278,10 +297,10 @@ Sleep - 9 hours
 
 <div class="saved">
 
-<h3>📋 Saved Plan</h3>
+<h3>💾 Saved <span id="savedDay">Today</span></h3>
 
 <button class="secondary" onclick="loadSavedPlan()">
-Load Saved Plan
+📋 Load Saved Plan
 </button>
 
 <button class="danger" onclick="clearSavedPlan()">
@@ -301,6 +320,9 @@ Planly • Built to make your day easier
 </footer>
 
 <script>
+
+let currentDay = "today";
+
 
 function formatTime(minutes) {
 
@@ -362,18 +384,14 @@ function parseDuration(text) {
         text.match(/(\d+(?:\.\d+)?)\s*hours?/i);
 
     if (hourMatch) {
-        return Math.round(
-            parseFloat(hourMatch[1]) * 60
-        );
+        return Math.round(parseFloat(hourMatch[1]) * 60);
     }
 
     const hrMatch =
         text.match(/(\d+(?:\.\d+)?)\s*hrs?/i);
 
     if (hrMatch) {
-        return Math.round(
-            parseFloat(hrMatch[1]) * 60
-        );
+        return Math.round(parseFloat(hrMatch[1]) * 60);
     }
 
     return null;
@@ -397,6 +415,86 @@ function cleanTaskName(text) {
             ""
         )
         .trim();
+}
+
+
+function switchDay(day) {
+
+    saveCurrentInput();
+
+    currentDay = day;
+
+    const todayTab =
+        document.getElementById("todayTab");
+
+    const tomorrowTab =
+        document.getElementById("tomorrowTab");
+
+    const title =
+        document.getElementById("dayTitle");
+
+    const savedDay =
+        document.getElementById("savedDay");
+
+
+    todayTab.classList.remove("active");
+    tomorrowTab.classList.remove("active");
+
+
+    if (day === "today") {
+
+        todayTab.classList.add("active");
+
+        title.textContent =
+            "Today's Plan";
+
+        savedDay.textContent =
+            "Today";
+
+    } else {
+
+        tomorrowTab.classList.add("active");
+
+        title.textContent =
+            "Tomorrow's Plan";
+
+        savedDay.textContent =
+            "Tomorrow";
+    }
+
+
+    document.getElementById("tasks").value = "";
+    document.getElementById("startTime").value = "";
+    document.getElementById("endTime").value = "";
+    document.getElementById("schedule").innerHTML = "";
+
+    loadSavedPlan();
+}
+
+
+function saveCurrentInput() {
+
+    const tasks =
+        document.getElementById("tasks").value;
+
+    const start =
+        document.getElementById("startTime").value;
+
+    const end =
+        document.getElementById("endTime").value;
+
+
+    if (!tasks && !start && !end) return;
+
+
+    localStorage.setItem(
+        "planlyDraft_" + currentDay,
+        JSON.stringify({
+            tasks: tasks,
+            start: start,
+            end: end
+        })
+    );
 }
 
 
@@ -446,8 +544,10 @@ function makeSchedule() {
 
 
     if (endMinutes <= startMinutes) {
+
         schedule.innerHTML =
             "<p>Your end time needs to be after your start time.</p>";
+
         return;
     }
 
@@ -469,13 +569,19 @@ function makeSchedule() {
 
 
         if (line.startsWith("!!")) {
+
             priority = "MUST DO";
+
             line = line.substring(2).trim();
+
         }
 
         else if (line.startsWith("!")) {
+
             priority = "SHOULD DO";
+
             line = line.substring(1).trim();
+
         }
 
 
@@ -541,14 +647,14 @@ function makeSchedule() {
 
     flexibleTasks.sort((a, b) => {
 
-        const priorityValue = {
+        const values = {
             "MUST DO": 3,
             "SHOULD DO": 2,
             "NORMAL": 1
         };
 
-        return priorityValue[b.priority] -
-               priorityValue[a.priority];
+        return values[b.priority] -
+               values[a.priority];
     });
 
 
@@ -649,7 +755,12 @@ function makeSchedule() {
     );
 
 
-    let html = "<h2>🗓️ Your Plan</h2>";
+    let html =
+        "<h2>🗓️ " +
+        (currentDay === "today"
+            ? "Today's Plan"
+            : "Tomorrow's Plan") +
+        "</h2>";
 
 
     events.forEach(event => {
@@ -680,21 +791,15 @@ function makeSchedule() {
 
         html += `
             <div class="task ${event.type}">
-
                 <strong>${label}</strong>
-
                 <br>
-
                 <strong>
                     ${formatTime(event.start)}
                     –
                     ${formatTime(event.end)}
                 </strong>
-
                 <br>
-
                 ${event.name}
-
             </div>
         `;
 
@@ -703,9 +808,9 @@ function makeSchedule() {
 
     schedule.innerHTML = html;
 
-    // Automatically save the complete plan
+
     localStorage.setItem(
-        "planlyPlan",
+        "planlyPlan_" + currentDay,
         JSON.stringify({
             tasks: input,
             start: start,
@@ -715,20 +820,24 @@ function makeSchedule() {
     );
 
 
-    status.innerHTML = "✅ Plan saved!";
+    status.innerHTML =
+        "✅ " +
+        (currentDay === "today"
+            ? "Today's plan"
+            : "Tomorrow's plan") +
+        " saved!";
 }
 
 
 function loadSavedPlan() {
 
     const saved =
-        localStorage.getItem("planlyPlan");
+        localStorage.getItem(
+            "planlyPlan_" + currentDay
+        );
 
     const status =
         document.getElementById("status");
-
-    const schedule =
-        document.getElementById("schedule");
 
 
     if (!saved) {
@@ -740,7 +849,8 @@ function loadSavedPlan() {
     }
 
 
-    const plan = JSON.parse(saved);
+    const plan =
+        JSON.parse(saved);
 
 
     document.getElementById("tasks").value =
@@ -752,8 +862,9 @@ function loadSavedPlan() {
     document.getElementById("endTime").value =
         plan.end;
 
-    schedule.innerHTML =
+    document.getElementById("schedule").innerHTML =
         plan.html;
+
 
     status.innerHTML =
         "📋 Saved plan loaded!";
@@ -762,7 +873,10 @@ function loadSavedPlan() {
 
 function clearSavedPlan() {
 
-    localStorage.removeItem("planlyPlan");
+    localStorage.removeItem(
+        "planlyPlan_" + currentDay
+    );
+
 
     document.getElementById("schedule").innerHTML = "";
 
@@ -772,19 +886,19 @@ function clearSavedPlan() {
 
     document.getElementById("endTime").value = "";
 
+
     document.getElementById("status").innerHTML =
-        "🗑️ Saved plan cleared.";
+        "🗑️ " +
+        (currentDay === "today"
+            ? "Today's plan"
+            : "Tomorrow's plan") +
+        " cleared.";
 }
 
 
-// Automatically load the saved plan
-// when Planly opens.
-
 window.addEventListener("load", function() {
 
-    if (localStorage.getItem("planlyPlan")) {
-        loadSavedPlan();
-    }
+    loadSavedPlan();
 
 });
 
