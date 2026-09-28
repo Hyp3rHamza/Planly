@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Planly — Your Day, Organized</title>
 
 <style>
@@ -51,7 +52,7 @@ header {
 .hero p {
     font-size: 20px;
     color: #6b7280;
-    margin-bottom: 40px;
+    margin-bottom: 35px;
 }
 
 .box {
@@ -64,7 +65,7 @@ header {
 
 textarea {
     width: 100%;
-    min-height: 150px;
+    min-height: 180px;
     padding: 18px;
     border: 2px solid #e5e7eb;
     border-radius: 12px;
@@ -128,28 +129,24 @@ button:hover {
     margin: 10px 0;
     border-radius: 10px;
     background: #f3f4f6;
-}
-
-.must {
-    border-left: 6px solid #ef4444;
-}
-
-.should {
-    border-left: 6px solid #f59e0b;
-}
-
-.optional {
-    border-left: 6px solid #22c55e;
-}
-
-.normal {
     border-left: 6px solid #6366f1;
 }
 
-.priority {
-    font-size: 12px;
-    font-weight: 800;
-    margin-bottom: 5px;
+.fixed {
+    border-left-color: #ef4444;
+}
+
+.duration {
+    border-left-color: #f59e0b;
+}
+
+.info {
+    background: #f3f4f6;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    color: #4b5563;
+    font-size: 14px;
 }
 
 footer {
@@ -172,25 +169,29 @@ footer {
 <h1>Turn your chaos into a plan.</h1>
 
 <p>
-Tell Planly what you need to do and when you're free.
+Tell Planly what you need to do. We'll organize it around your time.
 </p>
 
 <div class="box">
 
 <h2>What do you need to get done?</h2>
 
-<p style="color:#6b7280;">
-Use <b>!!</b> for Must Do,
-<b>!</b> for Should Do,
-<b>?</b> for If I Have Time.
-</p>
+<div class="info">
+    <b>How to write tasks:</b><br><br>
+
+    <b>Fixed time:</b> Basketball - 5:00 PM<br>
+    <b>Duration:</b> Homework - 60 min<br>
+    <b>Priority:</b> !! Homework - 60 min<br><br>
+
+    You can mix fixed-time and flexible tasks.
+</div>
 
 <textarea id="tasks"
 placeholder="Example:
-!! Finish science project
-! Clean my room
-? Play basketball
-Study for test"></textarea>
+!! Homework - 60 min
+Dinner - 30 min
+Basketball - 5:00 PM
+! Clean room - 30 min"></textarea>
 
 <div class="times">
 
@@ -240,6 +241,39 @@ function formatTime(minutes) {
         " " + period;
 }
 
+
+function parseTime(text) {
+
+    let match = text.match(/(\d{1,2}):(\d{2})\s*(AM|PM)/i);
+
+    if (!match) return null;
+
+    let hour = parseInt(match[1]);
+    let minute = parseInt(match[2]);
+    let period = match[3].toUpperCase();
+
+    if (period === "PM" && hour !== 12) {
+        hour += 12;
+    }
+
+    if (period === "AM" && hour === 12) {
+        hour = 0;
+    }
+
+    return hour * 60 + minute;
+}
+
+
+function parseDuration(text) {
+
+    let match = text.match(/(\d+)\s*min/i);
+
+    if (!match) return null;
+
+    return parseInt(match[1]);
+}
+
+
 function makeSchedule() {
 
     const input = document.getElementById("tasks").value.trim();
@@ -258,49 +292,6 @@ function makeSchedule() {
         return;
     }
 
-    let tasks = input
-        .split("\n")
-        .map(task => task.trim())
-        .filter(task => task.length > 0)
-        .map(task => {
-
-            if (task.startsWith("!!")) {
-                return {
-                    text: task.substring(2).trim(),
-                    priority: 3,
-                    label: "🔴 MUST DO",
-                    className: "must"
-                };
-            }
-
-            if (task.startsWith("!")) {
-                return {
-                    text: task.substring(1).trim(),
-                    priority: 2,
-                    label: "🟡 SHOULD DO",
-                    className: "should"
-                };
-            }
-
-            if (task.startsWith("?")) {
-                return {
-                    text: task.substring(1).trim(),
-                    priority: 1,
-                    label: "🟢 IF I HAVE TIME",
-                    className: "optional"
-                };
-            }
-
-            return {
-                text: task,
-                priority: 2,
-                label: "TASK",
-                className: "normal"
-            };
-        });
-
-    tasks.sort((a, b) => b.priority - a.priority);
-
     let startParts = start.split(":");
     let endParts = end.split(":");
 
@@ -318,27 +309,163 @@ function makeSchedule() {
         return;
     }
 
-    let available = endMinutes - startMinutes;
-    let taskLength = Math.floor(available / tasks.length);
+    let lines = input
+        .split("\n")
+        .map(x => x.trim())
+        .filter(x => x.length > 0);
+
+    let fixedTasks = [];
+    let flexibleTasks = [];
+
+    lines.forEach(line => {
+
+        let priority = "NORMAL";
+
+        if (line.startsWith("!!")) {
+            priority = "MUST DO";
+            line = line.substring(2).trim();
+        } 
+        else if (line.startsWith("!")) {
+            priority = "SHOULD DO";
+            line = line.substring(1).trim();
+        }
+
+        let fixedTime = parseTime(line);
+
+        let duration = parseDuration(line);
+
+        let cleanName = line
+            .replace(/\s*-\s*\d+\s*min/i, "")
+            .replace(/\s*-\s*\d{1,2}:\d{2}\s*(AM|PM)/i, "")
+            .trim();
+
+        if (fixedTime !== null) {
+
+            fixedTasks.push({
+                name: cleanName,
+                time: fixedTime,
+                duration: duration || 60,
+                priority: priority
+            });
+
+        } else {
+
+            flexibleTasks.push({
+                name: cleanName,
+                duration: duration || 30,
+                priority: priority
+            });
+
+        }
+    });
+
+
+    fixedTasks.sort((a, b) => a.time - b.time);
+
+    flexibleTasks.sort((a, b) => {
+
+        if (a.priority === "MUST DO") return -1;
+        if (b.priority === "MUST DO") return 1;
+
+        if (a.priority === "SHOULD DO") return -1;
+        if (b.priority === "SHOULD DO") return 1;
+
+        return 0;
+    });
+
+
+    let events = [];
+
+    fixedTasks.forEach(task => {
+
+        events.push({
+            name: task.name,
+            start: task.time,
+            end: task.time + task.duration,
+            priority: task.priority,
+            type: "fixed"
+        });
+
+    });
+
+
+    let currentTime = startMinutes;
+
+
+    flexibleTasks.forEach(task => {
+
+        while (true) {
+
+            let conflict = events.find(event =>
+                currentTime < event.end &&
+                currentTime + task.duration > event.start
+            );
+
+            if (!conflict) break;
+
+            currentTime = conflict.end;
+        }
+
+
+        if (currentTime + task.duration <= endMinutes) {
+
+            events.push({
+                name: task.name,
+                start: currentTime,
+                end: currentTime + task.duration,
+                priority: task.priority,
+                type: "duration"
+            });
+
+            currentTime += task.duration;
+        }
+
+    });
+
+
+    events.sort((a, b) => a.start - b.start);
+
 
     let html = "<h2>🗓️ Your Plan</h2>";
 
-    tasks.forEach((task, index) => {
 
-        let taskStart = startMinutes + taskLength * index;
-        let taskEnd = taskStart + taskLength;
+    events.forEach(event => {
+
+        let priorityText = "";
+
+        if (event.priority === "MUST DO") {
+            priorityText = "🔴 MUST DO";
+        } 
+        else if (event.priority === "SHOULD DO") {
+            priorityText = "🟡 SHOULD DO";
+        } 
+        else {
+            priorityText = "TASK";
+        }
+
 
         html += `
-            <div class="task ${task.className}">
-                <div class="priority">${task.label}</div>
+            <div class="task ${event.type}">
+                <strong>${priorityText}</strong><br>
+
                 <strong>
-                    ${formatTime(taskStart)} – ${formatTime(taskEnd)}
+                    ${formatTime(event.start)}
+                    –
+                    ${formatTime(event.end)}
                 </strong>
+
                 <br>
-                ${task.text}
+
+                ${event.name}
             </div>
         `;
     });
+
+
+    if (events.length === 0) {
+        html += "<p>No tasks could fit in this time period.</p>";
+    }
+
 
     schedule.innerHTML = html;
 }
