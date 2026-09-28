@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Planly</title>
+</head>
+<body>
+    <h1>Planly</h1>
+    <p>Turn your chaos into a plan.</p>
+
+    <h2>What do you need to get done?</h2>
+
+    <textarea id="tasks" placeholder="Example: Homework, basketball practice, clean my room..."></textarea>
+
+    <br><br>
+
+    <button onclick="makeSchedule()">Create My Schedule</button>
+
+    <h2>Your Schedule</h2>
+    <div id="schedule"></div>
+
+    <script>
+        function makeSchedule() {
+            const tasks = document.getElementById("tasks").value;
+
+            if (!tasks.trim()) {
+                document.getElementById("schedule").innerHTML =
+                    "<p>Enter some tasks first!</p>";
+                return;
+            }
+
+            document.getElementById("schedule").innerHTML =
+                "<p>Here's what you need to do:</p><p>" +
+                tasks.replace(/\n/g, "<br>") +
+                "</p>";
+        }
+    </script>
+</body>
+</html>
