@@ -1,213 +1,794 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Planly</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      background: #f5f6fa;
-      color: #222;
-    }
+<title>Planly — Your Day, Organized</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f5f7fb;
+    color: #111827;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 22px 8%;
+    background: white;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.logo {
+    font-size: 26px;
+    font-weight: 800;
+}
+
+.tag {
+    color: #6b7280;
+    font-size: 14px;
+}
+
+.hero {
+    max-width: 900px;
+    margin: 60px auto;
+    padding: 0 25px;
+    text-align: center;
+}
+
+.hero h1 {
+    font-size: 48px;
+    margin-bottom: 15px;
+}
+
+.hero p {
+    font-size: 19px;
+    color: #6b7280;
+    margin-bottom: 35px;
+}
+
+.box {
+    background: white;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 10px 35px rgba(0,0,0,0.08);
+    text-align: left;
+}
+
+textarea {
+    width: 100%;
+    min-height: 180px;
+    padding: 18px;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    font-size: 16px;
+    resize: vertical;
+    outline: none;
+}
+
+textarea:focus,
+input:focus {
+    border-color: #6366f1;
+}
+
+.times {
+    display: flex;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.time-box {
+    flex: 1;
+}
+
+.time-box label {
+    display: block;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+input {
+    width: 100%;
+    padding: 13px;
+    border: 2px solid #e5e7eb;
+    border-radius: 10px;
+    font-size: 16px;
+}
+
+button {
+    width: 100%;
+    margin-top: 15px;
+    padding: 15px;
+    border: none;
+    border-radius: 12px;
+    background: #6366f1;
+    color: white;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #4f46e5;
+}
+
+.secondary {
+    background: #e5e7eb;
+    color: #111827;
+}
+
+.secondary:hover {
+    background: #d1d5db;
+}
+
+.danger {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.danger:hover {
+    background: #fecaca;
+}
+
+#schedule {
+    margin-top: 30px;
+}
+
+.task {
+    padding: 16px;
+    margin: 10px 0;
+    border-radius: 10px;
+    background: #f3f4f6;
+    border-left: 6px solid #6366f1;
+}
+
+.fixed {
+    border-left-color: #ef4444;
+}
+
+.duration {
+    border-left-color: #f59e0b;
+}
+
+.sleep {
+    border-left-color: #8b5cf6;
+}
+
+.free {
+    border-left-color: #22c55e;
+    background: #f0fdf4;
+}
+
+.saved {
+    margin-top: 25px;
+    padding: 18px;
+    background: #eef2ff;
+    border-radius: 14px;
+}
+
+.info {
+    background: #f3f4f6;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    color: #4b5563;
+    font-size: 14px;
+}
+
+.status {
+    text-align: center;
+    margin-top: 12px;
+    font-weight: 700;
+    color: #16a34a;
+}
+
+footer {
+    text-align: center;
+    padding: 30px;
+    color: #9ca3af;
+}
+
+@media (max-width: 600px) {
 
     header {
-      background: #111827;
-      color: white;
-      padding: 20px;
-      text-align: center;
+        padding: 18px 5%;
     }
 
-    header h1 {
-      margin: 0;
-      font-size: 30px;
+    .hero {
+        margin: 35px auto;
     }
 
-    .container {
-      max-width: 700px;
-      margin: 20px auto;
-      padding: 0 16px;
+    .hero h1 {
+        font-size: 38px;
     }
 
-    .card {
-      background: white;
-      border-radius: 16px;
-      padding: 20px;
-      margin-bottom: 16px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    .times {
+        flex-direction: column;
     }
 
-    input {
-      width: 100%;
-      box-sizing: border-box;
-      padding: 13px;
-      margin: 6px 0 10px;
-      border: 1px solid #ddd;
-      border-radius: 10px;
-      font-size: 16px;
+    .box {
+        padding: 20px;
     }
-
-    button {
-      border: none;
-      border-radius: 10px;
-      padding: 12px 16px;
-      font-size: 15px;
-      cursor: pointer;
-      margin: 4px;
-    }
-
-    .add {
-      background: #2563eb;
-      color: white;
-    }
-
-    .save {
-      background: #16a34a;
-      color: white;
-    }
-
-    .clear {
-      background: #dc2626;
-      color: white;
-    }
-
-    .schedule-item {
-      background: #f3f4f6;
-      padding: 12px;
-      border-radius: 10px;
-      margin: 8px 0;
-    }
-
-    .empty {
-      color: #777;
-      text-align: center;
-      padding: 15px;
-    }
-
-    h2 {
-      margin-top: 0;
-    }
-  </style>
+}
+</style>
 </head>
 
 <body>
 
 <header>
-  <h1>📅 Planly</h1>
-  <p>Your daily schedule</p>
+    <div class="logo">Planly</div>
+    <div class="tag">Your day, organized.</div>
 </header>
 
-<div class="container">
+<section class="hero">
 
-  <div class="card">
-    <h2>🗓️ Today</h2>
+<h1>Turn your chaos into a plan.</h1>
 
-    <input id="timeInput" type="time">
-    <input id="taskInput" type="text" placeholder="What are you doing?">
+<p>
+Plan your day, save it, and come back whenever you need it.
+</p>
 
-    <button class="add" onclick="addTask()">➕ Add Task</button>
-  </div>
+<div class="box">
 
-  <div class="card">
-    <h2>📋 Saved Plan</h2>
+<h2>What do you need to get done?</h2>
 
-    <div id="schedule"></div>
+<div class="info">
+<b>Examples:</b><br><br>
+<b>Duration:</b> Homework - 60 min<br>
+<b>Hours:</b> Sleep - 9 hours<br>
+<b>Fixed time:</b> Basketball - 5:00 PM<br>
+<b>Priority:</b> !! Homework - 60 min
+</div>
 
-    <button class="save" onclick="savePlan()">💾 Save Plan</button>
-    <button class="clear" onclick="clearPlan()">🗑️ Clear Plan</button>
-  </div>
+<textarea id="tasks"
+placeholder="Example:
+!! Homework - 60 min
+Dinner - 30 min
+Basketball - 5:00 PM
+Sleep - 9 hours
+! Clean room - 30 min"></textarea>
+
+<div class="times">
+
+<div class="time-box">
+<label>I'm free from</label>
+<input type="time" id="startTime">
+</div>
+
+<div class="time-box">
+<label>Until</label>
+<input type="time" id="endTime">
+</div>
 
 </div>
 
+<button onclick="makeSchedule()">
+✨ Build My Plan
+</button>
+
+<div id="schedule"></div>
+
+<div class="saved">
+
+<h3>📋 Saved Plan</h3>
+
+<button class="secondary" onclick="loadSavedPlan()">
+Load Saved Plan
+</button>
+
+<button class="danger" onclick="clearSavedPlan()">
+🗑️ Clear Saved Plan
+</button>
+
+<div id="status"></div>
+
+</div>
+
+</div>
+
+</section>
+
+<footer>
+Planly • Built to make your day easier
+</footer>
+
 <script>
-  let schedule = JSON.parse(localStorage.getItem("planlySchedule")) || [];
 
-  function displaySchedule() {
-    const scheduleDiv = document.getElementById("schedule");
+function formatTime(minutes) {
 
-    scheduleDiv.innerHTML = "";
+    const nextDay = minutes >= 1440;
+    const adjusted = minutes % 1440;
 
-    if (schedule.length === 0) {
-      scheduleDiv.innerHTML =
-        '<div class="empty">No tasks yet. Add something above!</div>';
-      return;
+    const hours = Math.floor(adjusted / 60);
+    const mins = adjusted % 60;
+
+    const period = hours >= 12 ? "PM" : "AM";
+
+    let displayHour = hours % 12;
+
+    if (displayHour === 0) {
+        displayHour = 12;
     }
 
-    schedule.forEach((item, index) => {
-      const div = document.createElement("div");
-      div.className = "schedule-item";
+    return displayHour + ":" +
+        mins.toString().padStart(2, "0") +
+        " " + period +
+        (nextDay ? " (next day)" : "");
+}
 
-      div.innerHTML = `
-        <strong>${item.time}</strong> — ${item.task}
-        <button onclick="removeTask(${index})">❌</button>
-      `;
 
-      scheduleDiv.appendChild(div);
-    });
-  }
+function parseTime(text) {
 
-  function addTask() {
-    const time = document.getElementById("timeInput").value;
-    const task = document.getElementById("taskInput").value.trim();
+    const match = text.match(
+        /(\d{1,2}):(\d{2})\s*(AM|PM)/i
+    );
 
-    if (!time || !task) {
-      alert("Please enter a time and task.");
-      return;
+    if (!match) return null;
+
+    let hour = parseInt(match[1]);
+    const minute = parseInt(match[2]);
+    const period = match[3].toUpperCase();
+
+    if (period === "PM" && hour !== 12) {
+        hour += 12;
     }
 
-    schedule.push({
-      time: time,
-      task: task
+    if (period === "AM" && hour === 12) {
+        hour = 0;
+    }
+
+    return hour * 60 + minute;
+}
+
+
+function parseDuration(text) {
+
+    const minuteMatch =
+        text.match(/(\d+)\s*min(?:ute)?s?/i);
+
+    if (minuteMatch) {
+        return parseInt(minuteMatch[1]);
+    }
+
+    const hourMatch =
+        text.match(/(\d+(?:\.\d+)?)\s*hours?/i);
+
+    if (hourMatch) {
+        return Math.round(
+            parseFloat(hourMatch[1]) * 60
+        );
+    }
+
+    const hrMatch =
+        text.match(/(\d+(?:\.\d+)?)\s*hrs?/i);
+
+    if (hrMatch) {
+        return Math.round(
+            parseFloat(hrMatch[1]) * 60
+        );
+    }
+
+    return null;
+}
+
+
+function isSleepTask(name) {
+    return /sleep|bed|go to bed/i.test(name);
+}
+
+
+function cleanTaskName(text) {
+
+    return text
+        .replace(
+            /\s*-\s*\d+(?:\.\d+)?\s*(?:min(?:ute)?s?|hours?|hrs?)\b/i,
+            ""
+        )
+        .replace(
+            /\s*-\s*\d{1,2}:\d{2}\s*(?:AM|PM)/i,
+            ""
+        )
+        .trim();
+}
+
+
+function makeSchedule() {
+
+    const input =
+        document.getElementById("tasks").value.trim();
+
+    const start =
+        document.getElementById("startTime").value;
+
+    const end =
+        document.getElementById("endTime").value;
+
+    const schedule =
+        document.getElementById("schedule");
+
+    const status =
+        document.getElementById("status");
+
+
+    if (!input) {
+        schedule.innerHTML =
+            "<p>Enter some tasks first.</p>";
+        return;
+    }
+
+
+    if (!start || !end) {
+        schedule.innerHTML =
+            "<p>Please choose when you're free.</p>";
+        return;
+    }
+
+
+    const startParts = start.split(":");
+    const endParts = end.split(":");
+
+
+    const startMinutes =
+        parseInt(startParts[0]) * 60 +
+        parseInt(startParts[1]);
+
+    const endMinutes =
+        parseInt(endParts[0]) * 60 +
+        parseInt(endParts[1]);
+
+
+    if (endMinutes <= startMinutes) {
+        schedule.innerHTML =
+            "<p>Your end time needs to be after your start time.</p>";
+        return;
+    }
+
+
+    const lines = input
+        .split("\n")
+        .map(x => x.trim())
+        .filter(x => x.length > 0);
+
+
+    let fixedTasks = [];
+    let flexibleTasks = [];
+    let sleepTasks = [];
+
+
+    lines.forEach(line => {
+
+        let priority = "NORMAL";
+
+
+        if (line.startsWith("!!")) {
+            priority = "MUST DO";
+            line = line.substring(2).trim();
+        }
+
+        else if (line.startsWith("!")) {
+            priority = "SHOULD DO";
+            line = line.substring(1).trim();
+        }
+
+
+        const fixedTime = parseTime(line);
+        const duration = parseDuration(line);
+        const name = cleanTaskName(line);
+
+
+        if (isSleepTask(name)) {
+
+            sleepTasks.push({
+                name: name,
+                duration: duration || 480,
+                priority: priority
+            });
+
+            return;
+        }
+
+
+        if (fixedTime !== null) {
+
+            fixedTasks.push({
+                name: name,
+                time: fixedTime,
+                duration: duration || 60,
+                priority: priority
+            });
+
+        } else {
+
+            flexibleTasks.push({
+                name: name,
+                duration: duration || 30,
+                priority: priority
+            });
+
+        }
+
     });
 
-    schedule.sort((a, b) => a.time.localeCompare(b.time));
 
-    document.getElementById("timeInput").value = "";
-    document.getElementById("taskInput").value = "";
+    fixedTasks.sort(
+        (a, b) => a.time - b.time
+    );
 
-    displaySchedule();
-  }
 
-  function removeTask(index) {
-    schedule.splice(index, 1);
-    displaySchedule();
-  }
+    let events = [];
 
-  function savePlan() {
+
+    fixedTasks.forEach(task => {
+
+        events.push({
+            name: task.name,
+            start: task.time,
+            end: task.time + task.duration,
+            priority: task.priority,
+            type: "fixed"
+        });
+
+    });
+
+
+    flexibleTasks.sort((a, b) => {
+
+        const priorityValue = {
+            "MUST DO": 3,
+            "SHOULD DO": 2,
+            "NORMAL": 1
+        };
+
+        return priorityValue[b.priority] -
+               priorityValue[a.priority];
+    });
+
+
+    let gaps = [];
+    let cursor = startMinutes;
+
+
+    fixedTasks.forEach(task => {
+
+        if (task.time > cursor) {
+
+            gaps.push({
+                start: cursor,
+                end: task.time
+            });
+
+        }
+
+        cursor = Math.max(
+            cursor,
+            task.time + task.duration
+        );
+
+    });
+
+
+    if (cursor < endMinutes) {
+
+        gaps.push({
+            start: cursor,
+            end: endMinutes
+        });
+
+    }
+
+
+    flexibleTasks.forEach(task => {
+
+        for (let i = 0; i < gaps.length; i++) {
+
+            const gap = gaps[i];
+
+            if (
+                gap.end - gap.start
+                >= task.duration
+            ) {
+
+                events.push({
+                    name: task.name,
+                    start: gap.start,
+                    end: gap.start + task.duration,
+                    priority: task.priority,
+                    type: "duration"
+                });
+
+                gap.start += task.duration;
+
+                break;
+            }
+
+        }
+
+    });
+
+
+    gaps.forEach(gap => {
+
+        if (gap.end > gap.start) {
+
+            events.push({
+                name: "Free Time",
+                start: gap.start,
+                end: gap.end,
+                priority: "NORMAL",
+                type: "free"
+            });
+
+        }
+
+    });
+
+
+    sleepTasks.forEach(task => {
+
+        events.push({
+            name: task.name,
+            start: endMinutes,
+            end: endMinutes + task.duration,
+            priority: task.priority,
+            type: "sleep"
+        });
+
+    });
+
+
+    events.sort(
+        (a, b) => a.start - b.start
+    );
+
+
+    let html = "<h2>🗓️ Your Plan</h2>";
+
+
+    events.forEach(event => {
+
+        let label = "TASK";
+
+
+        if (event.type === "sleep") {
+            label = "🌙 SLEEP";
+        }
+
+        else if (event.type === "fixed") {
+            label = "📌 FIXED";
+        }
+
+        else if (event.type === "free") {
+            label = "🟢 FREE TIME";
+        }
+
+        else if (event.priority === "MUST DO") {
+            label = "🔴 MUST DO";
+        }
+
+        else if (event.priority === "SHOULD DO") {
+            label = "🟡 SHOULD DO";
+        }
+
+
+        html += `
+            <div class="task ${event.type}">
+
+                <strong>${label}</strong>
+
+                <br>
+
+                <strong>
+                    ${formatTime(event.start)}
+                    –
+                    ${formatTime(event.end)}
+                </strong>
+
+                <br>
+
+                ${event.name}
+
+            </div>
+        `;
+
+    });
+
+
+    schedule.innerHTML = html;
+
+    // Automatically save the complete plan
     localStorage.setItem(
-      "planlySchedule",
-      JSON.stringify(schedule)
+        "planlyPlan",
+        JSON.stringify({
+            tasks: input,
+            start: start,
+            end: end,
+            html: html
+        })
     );
 
-    alert("✅ Plan saved!");
-  }
 
-  function clearPlan() {
-    if (schedule.length === 0) {
-      return;
+    status.innerHTML = "✅ Plan saved!";
+}
+
+
+function loadSavedPlan() {
+
+    const saved =
+        localStorage.getItem("planlyPlan");
+
+    const status =
+        document.getElementById("status");
+
+    const schedule =
+        document.getElementById("schedule");
+
+
+    if (!saved) {
+
+        status.innerHTML =
+            "No saved plan yet.";
+
+        return;
     }
 
-    const confirmed = confirm(
-      "Are you sure you want to clear today's plan?"
-    );
 
-    if (!confirmed) {
-      return;
+    const plan = JSON.parse(saved);
+
+
+    document.getElementById("tasks").value =
+        plan.tasks;
+
+    document.getElementById("startTime").value =
+        plan.start;
+
+    document.getElementById("endTime").value =
+        plan.end;
+
+    schedule.innerHTML =
+        plan.html;
+
+    status.innerHTML =
+        "📋 Saved plan loaded!";
+}
+
+
+function clearSavedPlan() {
+
+    localStorage.removeItem("planlyPlan");
+
+    document.getElementById("schedule").innerHTML = "";
+
+    document.getElementById("tasks").value = "";
+
+    document.getElementById("startTime").value = "";
+
+    document.getElementById("endTime").value = "";
+
+    document.getElementById("status").innerHTML =
+        "🗑️ Saved plan cleared.";
+}
+
+
+// Automatically load the saved plan
+// when Planly opens.
+
+window.addEventListener("load", function() {
+
+    if (localStorage.getItem("planlyPlan")) {
+        loadSavedPlan();
     }
 
-    schedule = [];
+});
 
-    localStorage.removeItem("planlySchedule");
-
-    displaySchedule();
-  }
-
-  displaySchedule();
 </script>
 
 </body>
 </html>
-```
