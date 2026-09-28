@@ -1,141 +1,163 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Planly — Your Day, Organized</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Planly — Your Day, Organized</title>
 
-    <style>
-        * {
-            box-sizing: border-box;
-        }
+<style>
+* {
+    box-sizing: border-box;
+}
 
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #f5f7fb;
-            color: #111827;
-        }
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f5f7fb;
+    color: #111827;
+}
 
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 22px 8%;
-            background: white;
-            border-bottom: 1px solid #e5e7eb;
-        }
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 22px 8%;
+    background: white;
+    border-bottom: 1px solid #e5e7eb;
+}
 
-        .logo {
-            font-size: 26px;
-            font-weight: 800;
-        }
+.logo {
+    font-size: 26px;
+    font-weight: 800;
+}
 
-        .tag {
-            color: #6b7280;
-            font-size: 14px;
-        }
+.tag {
+    color: #6b7280;
+    font-size: 14px;
+}
 
-        .hero {
-            max-width: 900px;
-            margin: 70px auto;
-            padding: 0 25px;
-            text-align: center;
-        }
+.hero {
+    max-width: 900px;
+    margin: 70px auto;
+    padding: 0 25px;
+    text-align: center;
+}
 
-        .hero h1 {
-            font-size: 52px;
-            margin-bottom: 15px;
-        }
+.hero h1 {
+    font-size: 52px;
+    margin-bottom: 15px;
+}
 
-        .hero p {
-            font-size: 20px;
-            color: #6b7280;
-            margin-bottom: 40px;
-        }
+.hero p {
+    font-size: 20px;
+    color: #6b7280;
+    margin-bottom: 40px;
+}
 
-        .box {
-            background: white;
-            padding: 30px;
-            border-radius: 20px;
-            box-shadow: 0 10px 35px rgba(0,0,0,0.08);
-            text-align: left;
-        }
+.box {
+    background: white;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 10px 35px rgba(0,0,0,0.08);
+    text-align: left;
+}
 
-        textarea {
-            width: 100%;
-            min-height: 140px;
-            padding: 18px;
-            border: 2px solid #e5e7eb;
-            border-radius: 12px;
-            font-size: 16px;
-            resize: vertical;
-            outline: none;
-        }
+textarea {
+    width: 100%;
+    min-height: 150px;
+    padding: 18px;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    font-size: 16px;
+    resize: vertical;
+    outline: none;
+}
 
-        textarea:focus,
-        input:focus {
-            border-color: #6366f1;
-        }
+textarea:focus,
+input:focus {
+    border-color: #6366f1;
+}
 
-        .times {
-            display: flex;
-            gap: 15px;
-            margin-top: 20px;
-        }
+.times {
+    display: flex;
+    gap: 15px;
+    margin-top: 20px;
+}
 
-        .time-box {
-            flex: 1;
-        }
+.time-box {
+    flex: 1;
+}
 
-        .time-box label {
-            display: block;
-            font-weight: 700;
-            margin-bottom: 8px;
-        }
+.time-box label {
+    display: block;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
 
-        input {
-            width: 100%;
-            padding: 13px;
-            border: 2px solid #e5e7eb;
-            border-radius: 10px;
-            font-size: 16px;
-        }
+input {
+    width: 100%;
+    padding: 13px;
+    border: 2px solid #e5e7eb;
+    border-radius: 10px;
+    font-size: 16px;
+}
 
-        button {
-            width: 100%;
-            margin-top: 20px;
-            padding: 16px;
-            border: none;
-            border-radius: 12px;
-            background: #6366f1;
-            color: white;
-            font-size: 17px;
-            font-weight: 700;
-            cursor: pointer;
-        }
+button {
+    width: 100%;
+    margin-top: 20px;
+    padding: 16px;
+    border: none;
+    border-radius: 12px;
+    background: #6366f1;
+    color: white;
+    font-size: 17px;
+    font-weight: 700;
+    cursor: pointer;
+}
 
-        button:hover {
-            background: #4f46e5;
-        }
+button:hover {
+    background: #4f46e5;
+}
 
-        #schedule {
-            margin-top: 30px;
-        }
+#schedule {
+    margin-top: 30px;
+}
 
-        .task {
-            background: #f3f4f6;
-            padding: 16px;
-            margin: 10px 0;
-            border-radius: 10px;
-        }
+.task {
+    padding: 16px;
+    margin: 10px 0;
+    border-radius: 10px;
+    background: #f3f4f6;
+}
 
-        footer {
-            text-align: center;
-            padding: 30px;
-            color: #9ca3af;
-        }
-    </style>
+.must {
+    border-left: 6px solid #ef4444;
+}
+
+.should {
+    border-left: 6px solid #f59e0b;
+}
+
+.optional {
+    border-left: 6px solid #22c55e;
+}
+
+.normal {
+    border-left: 6px solid #6366f1;
+}
+
+.priority {
+    font-size: 12px;
+    font-weight: 800;
+    margin-bottom: 5px;
+}
+
+footer {
+    text-align: center;
+    padding: 30px;
+    color: #9ca3af;
+}
+</style>
 </head>
 
 <body>
@@ -147,49 +169,55 @@
 
 <section class="hero">
 
-    <h1>Turn your chaos into a plan.</h1>
+<h1>Turn your chaos into a plan.</h1>
 
-    <p>
-        Tell Planly what you need to do and when you're free.
-    </p>
+<p>
+Tell Planly what you need to do and when you're free.
+</p>
 
-    <div class="box">
+<div class="box">
 
-        <h2>What do you need to get done?</h2>
+<h2>What do you need to get done?</h2>
 
-        <textarea id="tasks"
-        placeholder="Example:
-Homework
-Study for my test
-Clean my room
-Basketball practice"></textarea>
+<p style="color:#6b7280;">
+Use <b>!!</b> for Must Do,
+<b>!</b> for Should Do,
+<b>?</b> for If I Have Time.
+</p>
 
-        <div class="times">
+<textarea id="tasks"
+placeholder="Example:
+!! Finish science project
+! Clean my room
+? Play basketball
+Study for test"></textarea>
 
-            <div class="time-box">
-                <label>I'm free from</label>
-                <input type="time" id="startTime">
-            </div>
+<div class="times">
 
-            <div class="time-box">
-                <label>Until</label>
-                <input type="time" id="endTime">
-            </div>
+<div class="time-box">
+<label>I'm free from</label>
+<input type="time" id="startTime">
+</div>
 
-        </div>
+<div class="time-box">
+<label>Until</label>
+<input type="time" id="endTime">
+</div>
 
-        <button onclick="makeSchedule()">
-            ✨ Build My Plan
-        </button>
+</div>
 
-        <div id="schedule"></div>
+<button onclick="makeSchedule()">
+✨ Build My Plan
+</button>
 
-    </div>
+<div id="schedule"></div>
+
+</div>
 
 </section>
 
 <footer>
-    Planly • Built to make your day easier
+Planly • Built to make your day easier
 </footer>
 
 <script>
@@ -212,7 +240,6 @@ function formatTime(minutes) {
         " " + period;
 }
 
-
 function makeSchedule() {
 
     const input = document.getElementById("tasks").value.trim();
@@ -231,10 +258,48 @@ function makeSchedule() {
         return;
     }
 
-    const tasks = input
+    let tasks = input
         .split("\n")
         .map(task => task.trim())
-        .filter(task => task.length > 0);
+        .filter(task => task.length > 0)
+        .map(task => {
+
+            if (task.startsWith("!!")) {
+                return {
+                    text: task.substring(2).trim(),
+                    priority: 3,
+                    label: "🔴 MUST DO",
+                    className: "must"
+                };
+            }
+
+            if (task.startsWith("!")) {
+                return {
+                    text: task.substring(1).trim(),
+                    priority: 2,
+                    label: "🟡 SHOULD DO",
+                    className: "should"
+                };
+            }
+
+            if (task.startsWith("?")) {
+                return {
+                    text: task.substring(1).trim(),
+                    priority: 1,
+                    label: "🟢 IF I HAVE TIME",
+                    className: "optional"
+                };
+            }
+
+            return {
+                text: task,
+                priority: 2,
+                label: "TASK",
+                className: "normal"
+            };
+        });
+
+    tasks.sort((a, b) => b.priority - a.priority);
 
     let startParts = start.split(":");
     let endParts = end.split(":");
@@ -254,23 +319,23 @@ function makeSchedule() {
     }
 
     let available = endMinutes - startMinutes;
-
     let taskLength = Math.floor(available / tasks.length);
 
     let html = "<h2>🗓️ Your Plan</h2>";
 
     tasks.forEach((task, index) => {
 
-        let taskStart = startMinutes + (taskLength * index);
+        let taskStart = startMinutes + taskLength * index;
         let taskEnd = taskStart + taskLength;
 
         html += `
-            <div class="task">
+            <div class="task ${task.className}">
+                <div class="priority">${task.label}</div>
                 <strong>
                     ${formatTime(taskStart)} – ${formatTime(taskEnd)}
                 </strong>
                 <br>
-                ${task}
+                ${task.text}
             </div>
         `;
     });
