@@ -38,7 +38,7 @@
 
         .hero {
             max-width: 900px;
-            margin: 80px auto;
+            margin: 70px auto;
             padding: 0 25px;
             text-align: center;
         }
@@ -64,7 +64,7 @@
 
         textarea {
             width: 100%;
-            min-height: 150px;
+            min-height: 140px;
             padding: 18px;
             border: 2px solid #e5e7eb;
             border-radius: 12px;
@@ -73,13 +73,38 @@
             outline: none;
         }
 
-        textarea:focus {
+        textarea:focus,
+        input:focus {
             border-color: #6366f1;
+        }
+
+        .times {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .time-box {
+            flex: 1;
+        }
+
+        .time-box label {
+            display: block;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        input {
+            width: 100%;
+            padding: 13px;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            font-size: 16px;
         }
 
         button {
             width: 100%;
-            margin-top: 18px;
+            margin-top: 20px;
             padding: 16px;
             border: none;
             border-radius: 12px;
@@ -95,13 +120,13 @@
         }
 
         #schedule {
-            margin-top: 25px;
+            margin-top: 30px;
         }
 
         .task {
             background: #f3f4f6;
-            padding: 14px;
-            margin: 8px 0;
+            padding: 16px;
+            margin: 10px 0;
             border-radius: 10px;
         }
 
@@ -125,8 +150,7 @@
     <h1>Turn your chaos into a plan.</h1>
 
     <p>
-        Tell Planly everything you need to get done.
-        We'll organize it into a simple plan.
+        Tell Planly what you need to do and when you're free.
     </p>
 
     <div class="box">
@@ -136,10 +160,23 @@
         <textarea id="tasks"
         placeholder="Example:
 Homework
-Basketball practice at 5 PM
-Clean my room
 Study for my test
-Take out the trash"></textarea>
+Clean my room
+Basketball practice"></textarea>
+
+        <div class="times">
+
+            <div class="time-box">
+                <label>I'm free from</label>
+                <input type="time" id="startTime">
+            </div>
+
+            <div class="time-box">
+                <label>Until</label>
+                <input type="time" id="endTime">
+            </div>
+
+        </div>
 
         <button onclick="makeSchedule()">
             ✨ Build My Plan
@@ -156,14 +193,41 @@ Take out the trash"></textarea>
 </footer>
 
 <script>
+
+function formatTime(minutes) {
+
+    let hours = Math.floor(minutes / 60);
+    let mins = minutes % 60;
+
+    let period = hours >= 12 ? "PM" : "AM";
+
+    let displayHour = hours % 12;
+
+    if (displayHour === 0) {
+        displayHour = 12;
+    }
+
+    return displayHour + ":" +
+        mins.toString().padStart(2, "0") +
+        " " + period;
+}
+
+
 function makeSchedule() {
 
     const input = document.getElementById("tasks").value.trim();
+    const start = document.getElementById("startTime").value;
+    const end = document.getElementById("endTime").value;
     const schedule = document.getElementById("schedule");
 
     if (!input) {
+        schedule.innerHTML = "<p>Enter some tasks first.</p>";
+        return;
+    }
+
+    if (!start || !end) {
         schedule.innerHTML =
-            "<p>Please enter some tasks first.</p>";
+            "<p>Please choose when you're free.</p>";
         return;
     }
 
@@ -172,18 +236,48 @@ function makeSchedule() {
         .map(task => task.trim())
         .filter(task => task.length > 0);
 
-    let html = "<h2>Your Plan</h2>";
+    let startParts = start.split(":");
+    let endParts = end.split(":");
+
+    let startMinutes =
+        parseInt(startParts[0]) * 60 +
+        parseInt(startParts[1]);
+
+    let endMinutes =
+        parseInt(endParts[0]) * 60 +
+        parseInt(endParts[1]);
+
+    if (endMinutes <= startMinutes) {
+        schedule.innerHTML =
+            "<p>Your end time needs to be after your start time.</p>";
+        return;
+    }
+
+    let available = endMinutes - startMinutes;
+
+    let taskLength = Math.floor(available / tasks.length);
+
+    let html = "<h2>🗓️ Your Plan</h2>";
 
     tasks.forEach((task, index) => {
+
+        let taskStart = startMinutes + (taskLength * index);
+        let taskEnd = taskStart + taskLength;
+
         html += `
             <div class="task">
-                <strong>${index + 1}.</strong> ${task}
+                <strong>
+                    ${formatTime(taskStart)} – ${formatTime(taskEnd)}
+                </strong>
+                <br>
+                ${task}
             </div>
         `;
     });
 
     schedule.innerHTML = html;
 }
+
 </script>
 
 </body>
