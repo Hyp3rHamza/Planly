@@ -140,6 +140,10 @@ button:hover {
     border-left-color: #f59e0b;
 }
 
+.sleep {
+    border-left-color: #8b5cf6;
+}
+
 .info {
     background: #f3f4f6;
     padding: 15px;
@@ -177,13 +181,12 @@ Tell Planly what you need to do. We'll organize it around your time.
 <h2>What do you need to get done?</h2>
 
 <div class="info">
-    <b>How to write tasks:</b><br><br>
+<b>Examples:</b><br><br>
 
-    <b>Fixed time:</b> Basketball - 5:00 PM<br>
-    <b>Duration:</b> Homework - 60 min<br>
-    <b>Priority:</b> !! Homework - 60 min<br><br>
-
-    You can mix fixed-time and flexible tasks.
+<b>Duration:</b> Homework - 60 min<br>
+<b>Hours:</b> Sleep - 9 hours<br>
+<b>Fixed time:</b> Basketball - 5:00 PM<br>
+<b>Priority:</b> !! Homework - 60 min
 </div>
 
 <textarea id="tasks"
@@ -191,6 +194,7 @@ placeholder="Example:
 !! Homework - 60 min
 Dinner - 30 min
 Basketball - 5:00 PM
+Sleep - 9 hours
 ! Clean room - 30 min"></textarea>
 
 <div class="times">
@@ -266,11 +270,40 @@ function parseTime(text) {
 
 function parseDuration(text) {
 
-    let match = text.match(/(\d+)\s*min/i);
+    let minuteMatch = text.match(/(\d+)\s*min(?:ute)?s?/i);
 
-    if (!match) return null;
+    if (minuteMatch) {
+        return parseInt(minuteMatch[1]);
+    }
 
-    return parseInt(match[1]);
+    let hourMatch = text.match(/(\d+(?:\.\d+)?)\s*hours?/i);
+
+    if (hourMatch) {
+        return Math.round(parseFloat(hourMatch[1]) * 60);
+    }
+
+    let hourSingleMatch = text.match(/(\d+(?:\.\d+)?)\s*hr/i);
+
+    if (hourSingleMatch) {
+        return Math.round(parseFloat(hourSingleMatch[1]) * 60);
+    }
+
+    return null;
+}
+
+
+function isSleepTask(name) {
+
+    return /sleep|bed|go to bed/i.test(name);
+}
+
+
+function cleanTaskName(text) {
+
+    return text
+        .replace(/\s*-\s*\d+(?:\.\d+)?\s*(?:min(?:ute)?s?|hours?|hrs?)\b/i, "")
+        .replace(/\s*-\s*\d{1,2}:\d{2}\s*(?:AM|PM)/i, "")
+        .trim();
 }
 
 
@@ -324,36 +357,34 @@ function makeSchedule() {
         if (line.startsWith("!!")) {
             priority = "MUST DO";
             line = line.substring(2).trim();
-        } 
+        }
         else if (line.startsWith("!")) {
             priority = "SHOULD DO";
             line = line.substring(1).trim();
         }
 
         let fixedTime = parseTime(line);
-
         let duration = parseDuration(line);
-
-        let cleanName = line
-            .replace(/\s*-\s*\d+\s*min/i, "")
-            .replace(/\s*-\s*\d{1,2}:\d{2}\s*(AM|PM)/i, "")
-            .trim();
+        let name = cleanTaskName(line);
+        let sleep = isSleepTask(name);
 
         if (fixedTime !== null) {
 
             fixedTasks.push({
-                name: cleanName,
+                name: name,
                 time: fixedTime,
                 duration: duration || 60,
-                priority: priority
+                priority: priority,
+                sleep: sleep
             });
 
         } else {
 
             flexibleTasks.push({
-                name: cleanName,
+                name: name,
                 duration: duration || 30,
-                priority: priority
+                priority: priority,
+                sleep: sleep
             });
 
         }
@@ -361,6 +392,35 @@ function makeSchedule() {
 
 
     fixedTasks.sort((a, b) => a.time - b.time);
+
+
+    /*
+       Sleep is treated specially.
+       If the user enters "Sleep - 9 hours",
+       Planly will NOT squeeze it into the
+       normal afternoon schedule.
+    */
+
+    let sleepTasks = flexibleTasks.filter(task => task.sleep);
+
+    flexibleTasks = flexibleTasks.filter(task => !task.sleep);
+
+
+    let events = [];
+
+
+    fixedTasks.forEach(task => {
+
+        events.push({
+            name: task.name,
+            start: task.time,
+            end: task.time + task.duration,
+            priority: task.priority,
+            type: task.sleep ? "sleep" : "fixed"
+        });
+
+    });
+
 
     flexibleTasks.sort((a, b) => {
 
@@ -371,21 +431,6 @@ function makeSchedule() {
         if (b.priority === "SHOULD DO") return 1;
 
         return 0;
-    });
-
-
-    let events = [];
-
-    fixedTasks.forEach(task => {
-
-        events.push({
-            name: task.name,
-            start: task.time,
-            end: task.time + task.duration,
-            priority: task.priority,
-            type: "fixed"
-        });
-
     });
 
 
@@ -423,6 +468,25 @@ function makeSchedule() {
     });
 
 
+    /*
+       Sleep is displayed separately so it doesn't
+       pretend that the user is sleeping during
+       their available afternoon time.
+    */
+
+    sleepTasks.forEach(task => {
+
+        events.push({
+            name: task.name,
+            start: endMinutes,
+            end: endMinutes + task.duration,
+            priority: task.priority,
+            type: "sleep"
+        });
+
+    });
+
+
     events.sort((a, b) => a.start - b.start);
 
 
@@ -433,12 +497,15 @@ function makeSchedule() {
 
         let priorityText = "";
 
-        if (event.priority === "MUST DO") {
+        if (event.type === "sleep") {
+            priorityText = "🌙 SLEEP";
+        }
+        else if (event.priority === "MUST DO") {
             priorityText = "🔴 MUST DO";
-        } 
+        }
         else if (event.priority === "SHOULD DO") {
             priorityText = "🟡 SHOULD DO";
-        } 
+        }
         else {
             priorityText = "TASK";
         }
@@ -460,11 +527,6 @@ function makeSchedule() {
             </div>
         `;
     });
-
-
-    if (events.length === 0) {
-        html += "<p>No tasks could fit in this time period.</p>";
-    }
 
 
     schedule.innerHTML = html;
