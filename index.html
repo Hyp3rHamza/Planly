@@ -7,6 +7,7 @@
 <title>Planly — Your Day, Organized</title>
 
 <style>
+
 * {
     box-sizing: border-box;
 }
@@ -22,13 +23,16 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 22px 8%;
+    padding: 20px 7%;
     background: white;
     border-bottom: 1px solid #e5e7eb;
+    position: sticky;
+    top: 0;
+    z-index: 10;
 }
 
 .logo {
-    font-size: 26px;
+    font-size: 27px;
     font-weight: 800;
 }
 
@@ -52,7 +56,15 @@ header {
 .hero p {
     color: #6b7280;
     font-size: 18px;
-    margin-bottom: 30px;
+    margin-bottom: 28px;
+}
+
+.box {
+    background: white;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 10px 35px rgba(0,0,0,0.08);
+    text-align: left;
 }
 
 .tabs {
@@ -71,14 +83,6 @@ header {
 .tab.active {
     background: #6366f1;
     color: white;
-}
-
-.box {
-    background: white;
-    padding: 30px;
-    border-radius: 20px;
-    box-shadow: 0 10px 35px rgba(0,0,0,0.08);
-    text-align: left;
 }
 
 textarea {
@@ -143,9 +147,56 @@ button:hover {
     color: #111827;
 }
 
+.secondary:hover {
+    background: #d1d5db;
+}
+
 .danger {
     background: #fee2e2;
     color: #991b1b;
+}
+
+.danger:hover {
+    background: #fecaca;
+}
+
+.plus-card {
+    margin-bottom: 25px;
+    padding: 22px;
+    border-radius: 18px;
+    background: linear-gradient(135deg, #eef2ff, #f5f3ff);
+    border: 2px solid #c7d2fe;
+}
+
+.plus-title {
+    font-size: 22px;
+    font-weight: 800;
+    margin-bottom: 8px;
+}
+
+.plus-price {
+    font-size: 25px;
+    font-weight: 800;
+    margin: 10px 0;
+}
+
+.plus-card ul {
+    padding-left: 20px;
+    line-height: 1.8;
+}
+
+.trial {
+    display: inline-block;
+    padding: 7px 12px;
+    border-radius: 999px;
+    background: #6366f1;
+    color: white;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.locked {
+    opacity: 0.65;
 }
 
 #schedule {
@@ -198,6 +249,30 @@ button:hover {
     margin-bottom: 20px;
     color: #4b5563;
     font-size: 14px;
+    line-height: 1.6;
+}
+
+.plus-features {
+    margin-top: 25px;
+}
+
+.feature {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    margin: 10px 0;
+    background: #f9fafb;
+    border-radius: 12px;
+}
+
+.feature-name {
+    font-weight: 700;
+}
+
+.lock {
+    font-size: 13px;
+    color: #6b7280;
 }
 
 footer {
@@ -210,6 +285,10 @@ footer {
 
     header {
         padding: 18px 5%;
+    }
+
+    .tag {
+        display: none;
     }
 
     .hero {
@@ -227,335 +306,933 @@ footer {
     .box {
         padding: 20px;
     }
+
+    .tabs {
+        gap: 7px;
+    }
 }
+
 </style>
 </head>
 
 <body>
 
 <header>
-    <div class="logo">Planly</div>
-    <div class="tag">Your day, organized.</div>
+
+    <div class="logo">
+        Planly
+    </div>
+
+    <div class="tag">
+        Your day, organized.
+    </div>
+
 </header>
+
 
 <section class="hero">
 
-<h1>Plan your day.</h1>
+    <h1>
+        Plan your day.
+    </h1>
 
-<p>Organize today and prepare for tomorrow.</p>
+    <p>
+        Organize today, prepare for tomorrow.
+    </p>
 
-<div class="tabs">
 
-<button id="todayTab" class="tab active" onclick="switchDay('today')">
-📅 Today
-</button>
+    <!-- PLUS TRIAL -->
 
-<button id="tomorrowTab" class="tab" onclick="switchDay('tomorrow')">
-➡️ Tomorrow
-</button>
+    <div class="plus-card">
 
-</div>
+        <div class="trial" id="trialBadge">
+            7-DAY FREE TRIAL
+        </div>
 
-<div class="box">
+        <div class="plus-title">
+            ⭐ Planly Plus
+        </div>
 
-<h2 id="dayTitle">Today's Plan</h2>
+        <div id="trialText">
+            Try Plus free for 7 days.
+        </div>
 
-<div class="info">
-<b>Examples:</b><br><br>
-Homework - 60 min<br>
-Basketball - 5:00 PM<br>
-Dinner - 30 min<br>
-Sleep - 9 hours
-</div>
+        <div class="plus-price">
+            $1.99/month
+        </div>
 
-<textarea id="tasks"
-placeholder="Example:
+        <ul>
+            <li>🔔 Reminders</li>
+            <li>📱 Notifications</li>
+            <li>⏰ Smart alerts</li>
+        </ul>
+
+        <button onclick="startTrial()" id="trialButton">
+            🎉 Start Free Trial
+        </button>
+
+    </div>
+
+
+    <div class="box">
+
+
+        <!-- DAY TABS -->
+
+        <div class="tabs">
+
+            <button
+                id="todayTab"
+                class="tab active"
+                onclick="switchDay('today')">
+
+                📅 Today
+
+            </button>
+
+
+            <button
+                id="tomorrowTab"
+                class="tab"
+                onclick="switchDay('tomorrow')">
+
+                ➡️ Tomorrow
+
+            </button>
+
+        </div>
+
+
+        <h2 id="dayTitle">
+            Today's Plan
+        </h2>
+
+
+        <div class="info">
+
+            <b>Examples:</b><br>
+
+            Homework - 60 min<br>
+
+            Basketball - 5:00 PM<br>
+
+            Dinner - 30 min<br>
+
+            Sleep - 9 hours<br>
+
+            !! Homework - 60 min = important
+
+        </div>
+
+
+        <textarea
+            id="tasks"
+            placeholder="Example:
 !! Homework - 60 min
 Dinner - 30 min
 Basketball - 5:00 PM
 Sleep - 9 hours"></textarea>
 
-<div class="times">
 
-<div class="time-box">
-<label>I'm free from</label>
-<input type="time" id="startTime">
-</div>
+        <div class="times">
 
-<div class="time-box">
-<label>Until</label>
-<input type="time" id="endTime">
-</div>
 
-</div>
+            <div class="time-box">
 
-<button onclick="makeSchedule()">
-✨ Build My Plan
-</button>
+                <label>
+                    I'm free from
+                </label>
 
-<div id="schedule"></div>
+                <input
+                    type="time"
+                    id="startTime">
 
-<div class="saved">
+            </div>
 
-<h3>💾 Saved <span id="savedDay">Today</span></h3>
 
-<button class="secondary" onclick="loadSavedPlan()">
-📋 Load Saved Plan
-</button>
+            <div class="time-box">
 
-<button class="danger" onclick="clearSavedPlan()">
-🗑️ Clear Saved Plan
-</button>
+                <label>
+                    Until
+                </label>
 
-<div id="status"></div>
+                <input
+                    type="time"
+                    id="endTime">
 
-</div>
+            </div>
 
-</div>
+
+        </div>
+
+
+        <button onclick="makeSchedule()">
+
+            ✨ Build My Plan
+
+        </button>
+
+
+        <div id="schedule"></div>
+
+
+        <!-- SAVED PLANS -->
+
+        <div class="saved">
+
+            <h3>
+                💾 Saved
+                <span id="savedDay">
+                    Today
+                </span>
+            </h3>
+
+
+            <button
+                class="secondary"
+                onclick="loadSavedPlan()">
+
+                📋 Load Saved Plan
+
+            </button>
+
+
+            <button
+                class="danger"
+                onclick="clearSavedPlan()">
+
+                🗑️ Clear Saved Plan
+
+            </button>
+
+
+            <div id="status"></div>
+
+        </div>
+
+
+        <!-- PLUS FEATURES -->
+
+        <div class="plus-features">
+
+            <h3>
+                ⭐ Planly Plus
+            </h3>
+
+
+            <div class="feature">
+
+                <div>
+
+                    <div class="feature-name">
+                        🔔 Reminders
+                    </div>
+
+                    <small>
+                        Get reminded about your tasks.
+                    </small>
+
+                </div>
+
+                <div
+                    class="lock"
+                    id="reminderStatus">
+
+                    🔒 Plus
+
+                </div>
+
+            </div>
+
+
+            <div class="feature">
+
+                <div>
+
+                    <div class="feature-name">
+                        📱 Notifications
+                    </div>
+
+                    <small>
+                        Receive alerts for upcoming tasks.
+                    </small>
+
+                </div>
+
+                <div
+                    class="lock"
+                    id="notificationStatus">
+
+                    🔒 Plus
+
+                </div>
+
+            </div>
+
+
+            <div class="feature">
+
+                <div>
+
+                    <div class="feature-name">
+                        ⏰ Smart Alerts
+                    </div>
+
+                    <small>
+                        Get notified before important tasks.
+                    </small>
+
+                </div>
+
+                <div
+                    class="lock"
+                    id="alertStatus">
+
+                    🔒 Plus
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </div>
 
 </section>
 
+
 <footer>
-Planly • Built to make your day easier
+
+    Planly • Built to make your day easier
+
 </footer>
 
+
 <script>
+
+
+/* =========================================
+   PLANLY PLUS TRIAL
+========================================= */
+
+
+const TRIAL_LENGTH =
+    7 * 24 * 60 * 60 * 1000;
+
 
 let currentDay = "today";
 
 
-function formatTime(minutes) {
+function getTrialStart() {
 
-    const nextDay = minutes >= 1440;
-    const adjusted = minutes % 1440;
+    return localStorage.getItem(
+        "planlyTrialStart"
+    );
 
-    const hours = Math.floor(adjusted / 60);
-    const mins = adjusted % 60;
+}
 
-    const period = hours >= 12 ? "PM" : "AM";
 
-    let displayHour = hours % 12;
+function startTrial() {
 
-    if (displayHour === 0) {
-        displayHour = 12;
+    let existing =
+        getTrialStart();
+
+
+    if (!existing) {
+
+        localStorage.setItem(
+            "planlyTrialStart",
+            Date.now().toString()
+        );
+
     }
 
-    return displayHour + ":" +
-        mins.toString().padStart(2, "0") +
-        " " + period +
-        (nextDay ? " (next day)" : "");
+
+    updateTrial();
+
+}
+
+
+function trialIsActive() {
+
+    const start =
+        getTrialStart();
+
+
+    if (!start) {
+        return false;
+    }
+
+
+    const elapsed =
+        Date.now() - Number(start);
+
+
+    return elapsed < TRIAL_LENGTH;
+
+}
+
+
+function getDaysRemaining() {
+
+    const start =
+        getTrialStart();
+
+
+    if (!start) {
+        return 7;
+    }
+
+
+    const remaining =
+        TRIAL_LENGTH -
+        (Date.now() - Number(start));
+
+
+    if (remaining <= 0) {
+        return 0;
+    }
+
+
+    return Math.ceil(
+        remaining /
+        (24 * 60 * 60 * 1000)
+    );
+
+}
+
+
+function updateTrial() {
+
+    const badge =
+        document.getElementById(
+            "trialBadge"
+        );
+
+    const text =
+        document.getElementById(
+            "trialText"
+        );
+
+    const button =
+        document.getElementById(
+            "trialButton"
+        );
+
+
+    const active =
+        trialIsActive();
+
+
+    const start =
+        getTrialStart();
+
+
+    if (!start) {
+
+        badge.textContent =
+            "7-DAY FREE TRIAL";
+
+        text.textContent =
+            "Try Planly Plus free for 7 days.";
+
+        button.textContent =
+            "🎉 Start Free Trial";
+
+        updateFeatureStatus(false);
+
+        return;
+    }
+
+
+    if (active) {
+
+        const days =
+            getDaysRemaining();
+
+
+        badge.textContent =
+            days +
+            (days === 1
+                ? " DAY LEFT"
+                : " DAYS LEFT");
+
+
+        text.textContent =
+            "Your Planly Plus trial is active.";
+
+
+        button.textContent =
+            "⭐ Plus Trial Active";
+
+
+        updateFeatureStatus(true);
+
+    } else {
+
+        badge.textContent =
+            "TRIAL ENDED";
+
+
+        text.textContent =
+            "Your 7-day Plus trial has ended.";
+
+
+        button.textContent =
+            "⭐ Planly Plus — $1.99/month";
+
+
+        updateFeatureStatus(false);
+
+    }
+
+}
+
+
+function updateFeatureStatus(active) {
+
+    const reminder =
+        document.getElementById(
+            "reminderStatus"
+        );
+
+    const notification =
+        document.getElementById(
+            "notificationStatus"
+        );
+
+    const alert =
+        document.getElementById(
+            "alertStatus"
+        );
+
+
+    if (active) {
+
+        reminder.textContent =
+            "✅ Trial";
+
+        notification.textContent =
+            "✅ Trial";
+
+        alert.textContent =
+            "✅ Trial";
+
+    } else {
+
+        reminder.textContent =
+            "🔒 Plus";
+
+        notification.textContent =
+            "🔒 Plus";
+
+        alert.textContent =
+            "🔒 Plus";
+
+    }
+
+}
+
+
+/* =========================================
+   TIME FUNCTIONS
+========================================= */
+
+
+function formatTime(minutes) {
+
+    const nextDay =
+        minutes >= 1440;
+
+
+    const adjusted =
+        minutes % 1440;
+
+
+    const hours =
+        Math.floor(
+            adjusted / 60
+        );
+
+
+    const mins =
+        adjusted % 60;
+
+
+    const period =
+        hours >= 12
+            ? "PM"
+            : "AM";
+
+
+    let displayHour =
+        hours % 12;
+
+
+    if (displayHour === 0) {
+
+        displayHour = 12;
+
+    }
+
+
+    return displayHour +
+        ":" +
+        mins
+            .toString()
+            .padStart(2, "0") +
+        " " +
+        period +
+        (
+            nextDay
+                ? " (next day)"
+                : ""
+        );
+
 }
 
 
 function parseTime(text) {
 
-    const match = text.match(
-        /(\d{1,2}):(\d{2})\s*(AM|PM)/i
+    const match =
+        text.match(
+            /(\d{1,2}):(\d{2})\s*(AM|PM)/i
+        );
+
+
+    if (!match) {
+        return null;
+    }
+
+
+    let hour =
+        parseInt(
+            match[1]
+        );
+
+
+    const minute =
+        parseInt(
+            match[2]
+        );
+
+
+    const period =
+        match[3]
+            .toUpperCase();
+
+
+    if (
+        period === "PM" &&
+        hour !== 12
+    ) {
+
+        hour += 12;
+
+    }
+
+
+    if (
+        period === "AM" &&
+        hour === 12
+    ) {
+
+        hour = 0;
+
+    }
+
+
+    return (
+        hour * 60 +
+        minute
     );
 
-    if (!match) return null;
-
-    let hour = parseInt(match[1]);
-    const minute = parseInt(match[2]);
-    const period = match[3].toUpperCase();
-
-    if (period === "PM" && hour !== 12) {
-        hour += 12;
-    }
-
-    if (period === "AM" && hour === 12) {
-        hour = 0;
-    }
-
-    return hour * 60 + minute;
 }
 
 
 function parseDuration(text) {
 
     const minuteMatch =
-        text.match(/(\d+)\s*min(?:ute)?s?/i);
+        text.match(
+            /(\d+)\s*min(?:ute)?s?/i
+        );
+
 
     if (minuteMatch) {
-        return parseInt(minuteMatch[1]);
+
+        return parseInt(
+            minuteMatch[1]
+        );
+
     }
+
 
     const hourMatch =
-        text.match(/(\d+(?:\.\d+)?)\s*hours?/i);
+        text.match(
+            /(\d+(?:\.\d+)?)\s*hours?/i
+        );
+
 
     if (hourMatch) {
-        return Math.round(parseFloat(hourMatch[1]) * 60);
+
+        return Math.round(
+            parseFloat(
+                hourMatch[1]
+            ) * 60
+        );
+
     }
+
 
     const hrMatch =
-        text.match(/(\d+(?:\.\d+)?)\s*hrs?/i);
+        text.match(
+            /(\d+(?:\.\d+)?)\s*hrs?/i
+        );
+
 
     if (hrMatch) {
-        return Math.round(parseFloat(hrMatch[1]) * 60);
+
+        return Math.round(
+            parseFloat(
+                hrMatch[1]
+            ) * 60
+        );
+
     }
 
+
     return null;
+
 }
 
 
 function isSleepTask(name) {
-    return /sleep|bed|go to bed/i.test(name);
+
+    return /sleep|bed|go to bed/i
+        .test(name);
+
 }
 
 
 function cleanTaskName(text) {
 
     return text
+
         .replace(
             /\s*-\s*\d+(?:\.\d+)?\s*(?:min(?:ute)?s?|hours?|hrs?)\b/i,
             ""
         )
+
         .replace(
             /\s*-\s*\d{1,2}:\d{2}\s*(?:AM|PM)/i,
             ""
         )
+
         .trim();
+
 }
+
+
+/* =========================================
+   DAY SWITCHING
+========================================= */
 
 
 function switchDay(day) {
 
-    saveCurrentInput();
-
     currentDay = day;
 
+
     const todayTab =
-        document.getElementById("todayTab");
+        document.getElementById(
+            "todayTab"
+        );
+
 
     const tomorrowTab =
-        document.getElementById("tomorrowTab");
+        document.getElementById(
+            "tomorrowTab"
+        );
+
 
     const title =
-        document.getElementById("dayTitle");
+        document.getElementById(
+            "dayTitle"
+        );
+
 
     const savedDay =
-        document.getElementById("savedDay");
+        document.getElementById(
+            "savedDay"
+        );
 
 
-    todayTab.classList.remove("active");
-    tomorrowTab.classList.remove("active");
+    todayTab.classList.remove(
+        "active"
+    );
+
+
+    tomorrowTab.classList.remove(
+        "active"
+    );
 
 
     if (day === "today") {
 
-        todayTab.classList.add("active");
+        todayTab.classList.add(
+            "active"
+        );
+
 
         title.textContent =
             "Today's Plan";
+
 
         savedDay.textContent =
             "Today";
 
     } else {
 
-        tomorrowTab.classList.add("active");
+        tomorrowTab.classList.add(
+            "active"
+        );
+
 
         title.textContent =
             "Tomorrow's Plan";
 
+
         savedDay.textContent =
             "Tomorrow";
+
     }
 
 
-    document.getElementById("tasks").value = "";
-    document.getElementById("startTime").value = "";
-    document.getElementById("endTime").value = "";
-    document.getElementById("schedule").innerHTML = "";
+    document.getElementById(
+        "tasks"
+    ).value = "";
+
+
+    document.getElementById(
+        "startTime"
+    ).value = "";
+
+
+    document.getElementById(
+        "endTime"
+    ).value = "";
+
+
+    document.getElementById(
+        "schedule"
+    ).innerHTML = "";
+
 
     loadSavedPlan();
+
 }
 
 
-function saveCurrentInput() {
-
-    const tasks =
-        document.getElementById("tasks").value;
-
-    const start =
-        document.getElementById("startTime").value;
-
-    const end =
-        document.getElementById("endTime").value;
-
-
-    if (!tasks && !start && !end) return;
-
-
-    localStorage.setItem(
-        "planlyDraft_" + currentDay,
-        JSON.stringify({
-            tasks: tasks,
-            start: start,
-            end: end
-        })
-    );
-}
+/* =========================================
+   BUILD PLAN
+========================================= */
 
 
 function makeSchedule() {
 
     const input =
-        document.getElementById("tasks").value.trim();
+        document.getElementById(
+            "tasks"
+        ).value.trim();
+
 
     const start =
-        document.getElementById("startTime").value;
+        document.getElementById(
+            "startTime"
+        ).value;
+
 
     const end =
-        document.getElementById("endTime").value;
+        document.getElementById(
+            "endTime"
+        ).value;
+
 
     const schedule =
-        document.getElementById("schedule");
+        document.getElementById(
+            "schedule"
+        );
+
 
     const status =
-        document.getElementById("status");
+        document.getElementById(
+            "status"
+        );
 
 
     if (!input) {
+
         schedule.innerHTML =
             "<p>Enter some tasks first.</p>";
+
         return;
+
     }
 
 
     if (!start || !end) {
+
         schedule.innerHTML =
             "<p>Please choose when you're free.</p>";
+
         return;
+
     }
 
 
-    const startParts = start.split(":");
-    const endParts = end.split(":");
+    const startParts =
+        start.split(":");
+
+
+    const endParts =
+        end.split(":");
 
 
     const startMinutes =
-        parseInt(startParts[0]) * 60 +
+        parseInt(startParts[0])
+        * 60 +
         parseInt(startParts[1]);
 
+
     const endMinutes =
-        parseInt(endParts[0]) * 60 +
+        parseInt(endParts[0])
+        * 60 +
         parseInt(endParts[1]);
 
 
-    if (endMinutes <= startMinutes) {
+    if (
+        endMinutes <=
+        startMinutes
+    ) {
 
         schedule.innerHTML =
             "<p>Your end time needs to be after your start time.</p>";
 
         return;
+
     }
 
 
-    const lines = input
-        .split("\n")
-        .map(x => x.trim())
-        .filter(x => x.length > 0);
+    const lines =
+        input
+            .split("\n")
+            .map(
+                x => x.trim()
+            )
+            .filter(
+                x => x.length > 0
+            );
 
 
     let fixedTasks = [];
@@ -565,58 +1242,105 @@ function makeSchedule() {
 
     lines.forEach(line => {
 
-        let priority = "NORMAL";
+        let priority =
+            "NORMAL";
 
 
-        if (line.startsWith("!!")) {
+        if (
+            line.startsWith("!!")
+        ) {
 
-            priority = "MUST DO";
+            priority =
+                "MUST DO";
 
-            line = line.substring(2).trim();
+
+            line =
+                line
+                    .substring(2)
+                    .trim();
 
         }
 
-        else if (line.startsWith("!")) {
+        else if (
+            line.startsWith("!")
+        ) {
 
-            priority = "SHOULD DO";
+            priority =
+                "SHOULD DO";
 
-            line = line.substring(1).trim();
+
+            line =
+                line
+                    .substring(1)
+                    .trim();
 
         }
 
 
-        const fixedTime = parseTime(line);
-        const duration = parseDuration(line);
-        const name = cleanTaskName(line);
+        const fixedTime =
+            parseTime(line);
 
 
-        if (isSleepTask(name)) {
+        const duration =
+            parseDuration(line);
+
+
+        const name =
+            cleanTaskName(line);
+
+
+        if (
+            isSleepTask(name)
+        ) {
 
             sleepTasks.push({
+
                 name: name,
-                duration: duration || 480,
-                priority: priority
+
+                duration:
+                    duration || 480,
+
+                priority:
+                    priority
+
             });
 
+
             return;
+
         }
 
 
-        if (fixedTime !== null) {
+        if (
+            fixedTime !== null
+        ) {
 
             fixedTasks.push({
+
                 name: name,
+
                 time: fixedTime,
-                duration: duration || 60,
-                priority: priority
+
+                duration:
+                    duration || 60,
+
+                priority:
+                    priority
+
             });
 
         } else {
 
             flexibleTasks.push({
+
                 name: name,
-                duration: duration || 30,
-                priority: priority
+
+                duration:
+                    duration || 30,
+
+                priority:
+                    priority
+
             });
 
         }
@@ -625,7 +1349,8 @@ function makeSchedule() {
 
 
     fixedTasks.sort(
-        (a, b) => a.time - b.time
+        (a,b) =>
+            a.time - b.time
     );
 
 
@@ -635,101 +1360,184 @@ function makeSchedule() {
     fixedTasks.forEach(task => {
 
         events.push({
-            name: task.name,
-            start: task.time,
-            end: task.time + task.duration,
-            priority: task.priority,
-            type: "fixed"
+
+            name:
+                task.name,
+
+            start:
+                task.time,
+
+            end:
+                task.time +
+                task.duration,
+
+            priority:
+                task.priority,
+
+            type:
+                "fixed"
+
         });
 
     });
 
 
-    flexibleTasks.sort((a, b) => {
+    flexibleTasks.sort(
+        (a,b) => {
 
-        const values = {
-            "MUST DO": 3,
-            "SHOULD DO": 2,
-            "NORMAL": 1
-        };
+            const values = {
 
-        return values[b.priority] -
-               values[a.priority];
-    });
+                "MUST DO": 3,
+
+                "SHOULD DO": 2,
+
+                "NORMAL": 1
+
+            };
+
+
+            return (
+                values[b.priority] -
+                values[a.priority]
+            );
+
+        }
+    );
 
 
     let gaps = [];
-    let cursor = startMinutes;
+
+
+    let cursor =
+        startMinutes;
 
 
     fixedTasks.forEach(task => {
 
-        if (task.time > cursor) {
+        if (
+            task.time >
+            cursor
+        ) {
 
             gaps.push({
-                start: cursor,
-                end: task.time
+
+                start:
+                    cursor,
+
+                end:
+                    task.time
+
             });
 
         }
 
-        cursor = Math.max(
-            cursor,
-            task.time + task.duration
-        );
+
+        cursor =
+            Math.max(
+                cursor,
+                task.time +
+                task.duration
+            );
 
     });
 
 
-    if (cursor < endMinutes) {
+    if (
+        cursor <
+        endMinutes
+    ) {
 
         gaps.push({
-            start: cursor,
-            end: endMinutes
+
+            start:
+                cursor,
+
+            end:
+                endMinutes
+
         });
 
     }
 
 
-    flexibleTasks.forEach(task => {
+    flexibleTasks.forEach(
+        task => {
 
-        for (let i = 0; i < gaps.length; i++) {
-
-            const gap = gaps[i];
-
-            if (
-                gap.end - gap.start
-                >= task.duration
+            for (
+                let i = 0;
+                i < gaps.length;
+                i++
             ) {
 
-                events.push({
-                    name: task.name,
-                    start: gap.start,
-                    end: gap.start + task.duration,
-                    priority: task.priority,
-                    type: "duration"
-                });
+                const gap =
+                    gaps[i];
 
-                gap.start += task.duration;
 
-                break;
+                if (
+                    gap.end -
+                    gap.start >=
+                    task.duration
+                ) {
+
+                    events.push({
+
+                        name:
+                            task.name,
+
+                        start:
+                            gap.start,
+
+                        end:
+                            gap.start +
+                            task.duration,
+
+                        priority:
+                            task.priority,
+
+                        type:
+                            "duration"
+
+                    });
+
+
+                    gap.start +=
+                        task.duration;
+
+
+                    break;
+
+                }
+
             }
 
         }
-
-    });
+    );
 
 
     gaps.forEach(gap => {
 
-        if (gap.end > gap.start) {
+        if (
+            gap.end >
+            gap.start
+        ) {
 
             events.push({
-                name: "Free Time",
-                start: gap.start,
-                end: gap.end,
-                priority: "NORMAL",
-                type: "free"
+
+                name:
+                    "Free Time",
+
+                start:
+                    gap.start,
+
+                end:
+                    gap.end,
+
+                priority:
+                    "NORMAL",
+
+                type:
+                    "free"
+
             });
 
         }
@@ -740,104 +1548,200 @@ function makeSchedule() {
     sleepTasks.forEach(task => {
 
         events.push({
-            name: task.name,
-            start: endMinutes,
-            end: endMinutes + task.duration,
-            priority: task.priority,
-            type: "sleep"
+
+            name:
+                task.name,
+
+            start:
+                endMinutes,
+
+            end:
+                endMinutes +
+                task.duration,
+
+            priority:
+                task.priority,
+
+            type:
+                "sleep"
+
         });
 
     });
 
 
     events.sort(
-        (a, b) => a.start - b.start
+        (a,b) =>
+            a.start - b.start
     );
 
 
     let html =
         "<h2>🗓️ " +
-        (currentDay === "today"
-            ? "Today's Plan"
-            : "Tomorrow's Plan") +
+        (
+            currentDay === "today"
+                ? "Today's Plan"
+                : "Tomorrow's Plan"
+        ) +
         "</h2>";
 
 
     events.forEach(event => {
 
-        let label = "TASK";
+        let label =
+            "TASK";
 
 
-        if (event.type === "sleep") {
-            label = "🌙 SLEEP";
+        if (
+            event.type ===
+            "sleep"
+        ) {
+
+            label =
+                "🌙 SLEEP";
+
         }
 
-        else if (event.type === "fixed") {
-            label = "📌 FIXED";
+        else if (
+            event.type ===
+            "fixed"
+        ) {
+
+            label =
+                "📌 FIXED";
+
         }
 
-        else if (event.type === "free") {
-            label = "🟢 FREE TIME";
+        else if (
+            event.type ===
+            "free"
+        ) {
+
+            label =
+                "🟢 FREE TIME";
+
         }
 
-        else if (event.priority === "MUST DO") {
-            label = "🔴 MUST DO";
+        else if (
+            event.priority ===
+            "MUST DO"
+        ) {
+
+            label =
+                "🔴 MUST DO";
+
         }
 
-        else if (event.priority === "SHOULD DO") {
-            label = "🟡 SHOULD DO";
+        else if (
+            event.priority ===
+            "SHOULD DO"
+        ) {
+
+            label =
+                "🟡 SHOULD DO";
+
         }
 
 
         html += `
-            <div class="task ${event.type}">
-                <strong>${label}</strong>
-                <br>
+
+            <div
+                class="task ${event.type}"
+            >
+
                 <strong>
-                    ${formatTime(event.start)}
-                    –
-                    ${formatTime(event.end)}
+                    ${label}
                 </strong>
+
                 <br>
+
+                <strong>
+
+                    ${formatTime(
+                        event.start
+                    )}
+
+                    –
+
+                    ${formatTime(
+                        event.end
+                    )}
+
+                </strong>
+
+                <br>
+
                 ${event.name}
+
             </div>
+
         `;
 
     });
 
 
-    schedule.innerHTML = html;
+    schedule.innerHTML =
+        html;
 
+
+    /* SAVE PLAN */
 
     localStorage.setItem(
-        "planlyPlan_" + currentDay,
+
+        "planlyPlan_" +
+        currentDay,
+
         JSON.stringify({
-            tasks: input,
-            start: start,
-            end: end,
-            html: html
+
+            tasks:
+                input,
+
+            start:
+                start,
+
+            end:
+                end,
+
+            html:
+                html
+
         })
+
     );
 
 
     status.innerHTML =
         "✅ " +
-        (currentDay === "today"
-            ? "Today's plan"
-            : "Tomorrow's plan") +
-        " saved!";
+        (
+            currentDay === "today"
+                ? "Today's"
+                : "Tomorrow's"
+        ) +
+        " plan saved!";
+
 }
+
+
+/* =========================================
+   SAVED PLANS
+========================================= */
 
 
 function loadSavedPlan() {
 
     const saved =
         localStorage.getItem(
-            "planlyPlan_" + currentDay
+
+            "planlyPlan_" +
+            currentDay
+
         );
 
+
     const status =
-        document.getElementById("status");
+        document.getElementById(
+            "status"
+        );
 
 
     if (!saved) {
@@ -846,6 +1750,7 @@ function loadSavedPlan() {
             "No saved plan yet.";
 
         return;
+
     }
 
 
@@ -853,54 +1758,97 @@ function loadSavedPlan() {
         JSON.parse(saved);
 
 
-    document.getElementById("tasks").value =
+    document.getElementById(
+        "tasks"
+    ).value =
         plan.tasks;
 
-    document.getElementById("startTime").value =
+
+    document.getElementById(
+        "startTime"
+    ).value =
         plan.start;
 
-    document.getElementById("endTime").value =
+
+    document.getElementById(
+        "endTime"
+    ).value =
         plan.end;
 
-    document.getElementById("schedule").innerHTML =
+
+    document.getElementById(
+        "schedule"
+    ).innerHTML =
         plan.html;
 
 
     status.innerHTML =
         "📋 Saved plan loaded!";
+
 }
 
 
 function clearSavedPlan() {
 
     localStorage.removeItem(
-        "planlyPlan_" + currentDay
+
+        "planlyPlan_" +
+        currentDay
+
     );
 
 
-    document.getElementById("schedule").innerHTML = "";
-
-    document.getElementById("tasks").value = "";
-
-    document.getElementById("startTime").value = "";
-
-    document.getElementById("endTime").value = "";
+    document.getElementById(
+        "schedule"
+    ).innerHTML = "";
 
 
-    document.getElementById("status").innerHTML =
-        "🗑️ " +
-        (currentDay === "today"
-            ? "Today's plan"
-            : "Tomorrow's plan") +
-        " cleared.";
+    document.getElementById(
+        "tasks"
+    ).value = "";
+
+
+    document.getElementById(
+        "startTime"
+    ).value = "";
+
+
+    document.getElementById(
+        "endTime"
+    ).value = "";
+
+
+    document.getElementById(
+        "status"
+    ).innerHTML =
+        "🗑️ Saved plan cleared.";
+
 }
 
 
-window.addEventListener("load", function() {
+/* =========================================
+   STARTUP
+========================================= */
 
-    loadSavedPlan();
 
-});
+window.addEventListener(
+    "load",
+    function() {
+
+        updateTrial();
+
+        loadSavedPlan();
+
+    }
+);
+
+
+/* Update the trial display periodically */
+
+setInterval(
+    updateTrial,
+    60000
+);
 
 </script>
 
