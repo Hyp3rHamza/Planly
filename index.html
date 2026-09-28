@@ -1,38 +1,190 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Planly</title>
-</head>
-<body>
-    <h1>Planly</h1>
-    <p>Turn your chaos into a plan.</p>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Planly — Your Day, Organized</title>
 
-    <h2>What do you need to get done?</h2>
-
-    <textarea id="tasks" placeholder="Example: Homework, basketball practice, clean my room..."></textarea>
-
-    <br><br>
-
-    <button onclick="makeSchedule()">Create My Schedule</button>
-
-    <h2>Your Schedule</h2>
-    <div id="schedule"></div>
-
-    <script>
-        function makeSchedule() {
-            const tasks = document.getElementById("tasks").value;
-
-            if (!tasks.trim()) {
-                document.getElementById("schedule").innerHTML =
-                    "<p>Enter some tasks first!</p>";
-                return;
-            }
-
-            document.getElementById("schedule").innerHTML =
-                "<p>Here's what you need to do:</p><p>" +
-                tasks.replace(/\n/g, "<br>") +
-                "</p>";
+    <style>
+        * {
+            box-sizing: border-box;
         }
-    </script>
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f5f7fb;
+            color: #111827;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 22px 8%;
+            background: white;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .logo {
+            font-size: 26px;
+            font-weight: 800;
+        }
+
+        .tag {
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        .hero {
+            max-width: 900px;
+            margin: 80px auto;
+            padding: 0 25px;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 52px;
+            margin-bottom: 15px;
+        }
+
+        .hero p {
+            font-size: 20px;
+            color: #6b7280;
+            margin-bottom: 40px;
+        }
+
+        .box {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 35px rgba(0,0,0,0.08);
+            text-align: left;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 150px;
+            padding: 18px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 16px;
+            resize: vertical;
+            outline: none;
+        }
+
+        textarea:focus {
+            border-color: #6366f1;
+        }
+
+        button {
+            width: 100%;
+            margin-top: 18px;
+            padding: 16px;
+            border: none;
+            border-radius: 12px;
+            background: #6366f1;
+            color: white;
+            font-size: 17px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #4f46e5;
+        }
+
+        #schedule {
+            margin-top: 25px;
+        }
+
+        .task {
+            background: #f3f4f6;
+            padding: 14px;
+            margin: 8px 0;
+            border-radius: 10px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px;
+            color: #9ca3af;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <div class="logo">Planly</div>
+    <div class="tag">Your day, organized.</div>
+</header>
+
+<section class="hero">
+
+    <h1>Turn your chaos into a plan.</h1>
+
+    <p>
+        Tell Planly everything you need to get done.
+        We'll organize it into a simple plan.
+    </p>
+
+    <div class="box">
+
+        <h2>What do you need to get done?</h2>
+
+        <textarea id="tasks"
+        placeholder="Example:
+Homework
+Basketball practice at 5 PM
+Clean my room
+Study for my test
+Take out the trash"></textarea>
+
+        <button onclick="makeSchedule()">
+            ✨ Build My Plan
+        </button>
+
+        <div id="schedule"></div>
+
+    </div>
+
+</section>
+
+<footer>
+    Planly • Built to make your day easier
+</footer>
+
+<script>
+function makeSchedule() {
+
+    const input = document.getElementById("tasks").value.trim();
+    const schedule = document.getElementById("schedule");
+
+    if (!input) {
+        schedule.innerHTML =
+            "<p>Please enter some tasks first.</p>";
+        return;
+    }
+
+    const tasks = input
+        .split("\n")
+        .map(task => task.trim())
+        .filter(task => task.length > 0);
+
+    let html = "<h2>Your Plan</h2>";
+
+    tasks.forEach((task, index) => {
+        html += `
+            <div class="task">
+                <strong>${index + 1}.</strong> ${task}
+            </div>
+        `;
+    });
+
+    schedule.innerHTML = html;
+}
+</script>
+
 </body>
 </html>
